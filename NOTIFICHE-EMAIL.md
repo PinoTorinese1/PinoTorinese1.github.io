@@ -48,41 +48,21 @@ Cancella tutto quello che c'è nell'editor e incolla:
 /**
  * Notifiche via e-mail — Gruppo Scout AGESCI Pino Torinese 1
  *
- * Gestisce due cose:
- *   • pre-iscrizioni  → sempre alla casella del gruppo
- *   • messaggi dal modulo contatti → gruppo + branca competente
+ * I destinatari NON sono più scritti qui: si gestiscono dalla
+ * scheda "Destinatari" del pannello capi. Questo script li legge
+ * dal ramo protetto /config/destinatari, che ha la lettura chiusa
+ * e non è raggiungibile né dal sito né da un visitatore.
  *
- * ⚠ GLI INDIRIZZI DELLE BRANCHE STANNO SOLO QUI.
- *   Non vanno messi nel codice del sito: sarebbero visibili nel
- *   sorgente della pagina e i raccoglitori di indirizzi per lo
- *   spam li troverebbero in poco tempo. Questo script gira sui
- *   server Google e non è leggibile dall'esterno.
+ * L'autenticazione usa il token OAuth dello script stesso, che
+ * funziona perché questo progetto appartiene allo stesso account
+ * Google proprietario del progetto Firebase.
  */
 
-// Casella principale: riceve tutto.
-const GRUPPO = 'pinotorinese1@piemonte.agesci.it';
+const DB = 'https://sito-pino1-default-rtdb.europe-west1.firebasedatabase.app';
 
-// ✏️ DA COMPILARE con gli indirizzi reali delle branche.
-//    Lascia la stringa vuota per far arrivare tutto solo al gruppo.
-const BRANCHE = {
-  branco:  '',   // es. 'branco.pino1@gmail.com'
-  reparto: '',
-  clan:    '',
-  coca:    ''
-};
-
-// Quale branca riceve, oltre al gruppo, in base all'oggetto scelto.
-const INOLTRO = {
-  informazioni:   [],
-  iscrizioni:     [],
-  ospitalita:     [],
-  branco:         ['branco'],
-  reparto:        ['reparto'],
-  clan:           ['clan'],
-  coca:           ['coca'],
-  collaborazione: ['coca'],
-  altro:          []
-};
+// Rete di sicurezza: se il database non risponde, le notifiche
+// arrivano comunque qui invece di perdersi.
+const RIPIEGO = 'pinotorinese1@piemonte.agesci.it';
 
 
 function doPost(e) {
@@ -91,23 +71,67 @@ function doPost(e) {
     if (d.tipo === 'contatto') inoltraMessaggio(d);
     else                       notificaIscrizione(d);
   } catch (err) {
-    // Non rilanciamo: il dato è già salvato su Firebase e un
-    // errore qui non deve avere conseguenze visibili.
     console.error('Notifica fallita: ' + err);
   }
   return ok();
 }
 
 
+/* ─── Lettura dei destinatari dal database ─── */
+function leggiDestinatari() {
+  try {
+    const token = ScriptApp.getOAuthToken();
+    const risposta = UrlFetchApp.fetch(
+      DB + '/config/destinatari.json?access_token=' + token,
+      { muteHttpExceptions: true }
+    );
+    if (risposta.getResponseCode() !== 200) {
+      console.warn('Lettura destinatari: HTTP ' + risposta.getResponseCode());
+      return null;
+    }
+    return JSON.parse(risposta.getContentText()) || {};
+  } catch (err) {
+    console.error('Lettura destinatari fallita: ' + err);
+    return null;
+  }
+}
+
+/* Chi riceve un certo argomento del modulo contatti. */
+function destinatariPer(chiave) {
+  const tutti = leggiDestinatari();
+  if (!tutti) return RIPIEGO;
+
+  const scelti = Object.keys(tutti)
+    .map(function (k) { return tutti[k]; })
+    .filter(function (d) {
+      if (!d || !d.email) return false;
+      if (d.sempre) return true;
+      return (d.argomenti || '').split(',').indexOf(chiave) !== -1;
+    })
+    .map(function (d) { return d.email; })
+    .filter(function (v, i, a) { return a.indexOf(v) === i; });   // niente doppioni
+
+  return scelti.length ? scelti.join(',') : RIPIEGO;
+}
+
+/* Chi riceve le pre-iscrizioni: solo chi ha "riceve tutto". */
+function destinatariIscrizioni() {
+  const tutti = leggiDestinatari();
+  if (!tutti) return RIPIEGO;
+
+  const scelti = Object.keys(tutti)
+    .map(function (k) { return tutti[k]; })
+    .filter(function (d) { return d && d.email && d.sempre; })
+    .map(function (d) { return d.email; })
+    .filter(function (v, i, a) { return a.indexOf(v) === i; });
+
+  return scelti.length ? scelti.join(',') : RIPIEGO;
+}
+
+
 /* ─── Messaggi dal modulo contatti ─── */
 function inoltraMessaggio(d) {
   if (!d.nome || !d.email || !d.testo) return;
-
-  // Gruppo + eventuali branche, senza doppioni e senza caselle vuote.
-  const destinatari = [GRUPPO]
-    .concat((INOLTRO[d.chiave] || []).map(b => BRANCHE[b]))
-    .filter((v, i, a) => v && a.indexOf(v) === i)
-    .join(',');
 
   const corpo =
     'Nuovo messaggio dal modulo contatti del sito.\n\n' +
@@ -123,10 +147,10 @@ function inoltraMessaggio(d) {
     'https://pinotorinese1.github.io/admin.html';
 
   MailApp.sendEmail({
-    to:      destinatari,
+    to:      destinatariPer(d.chiave),
     subject: '[Pino 1] ' + (d.oggetto || 'Messaggio') + ' — ' + d.nome,
     body:    corpo,
-    replyTo: d.email        // rispondere alla mail scrive a chi ha contattato
+    replyTo: d.email
   });
 }
 
@@ -156,7 +180,7 @@ function notificaIscrizione(d) {
     'fuori dalla Comunità Capi.';
 
   MailApp.sendEmail({
-    to:      GRUPPO,
+    to:      destinatariIscrizioni(),
     subject: '[Pino 1] Pre-iscrizione: ' + nome + ' (' + anni + ' anni)',
     body:    corpo,
     replyTo: d.email
@@ -196,9 +220,62 @@ function brancaPerEta(a) {
 }
 ```
 
-**Compila la tabella `BRANCHE`** con gli indirizzi reali. Se una casella
-non esiste ancora, lascia la stringa vuota: quel messaggio arriverà solo
-al gruppo, senza errori.
+### Un passaggio in più: i permessi dello script
+
+Perché lo script possa leggere i destinatari dal database, va dichiarato
+il permesso corrispondente.
+
+1. Nell'editor Apps Script: **⚙ Impostazioni progetto** (icona a sinistra)
+2. Spunta **Mostra il file manifest "appsscript.json" nell'editor**
+3. Torna su **Editor** e apri il file `appsscript.json` comparso
+4. Aggiungi il blocco `oauthScopes` come nell'esempio:
+
+```json
+{
+  "timeZone": "Europe/Rome",
+  "exceptionLogging": "STACKDRIVER",
+  "runtimeVersion": "V8",
+  "oauthScopes": [
+    "https://www.googleapis.com/auth/script.send_mail",
+    "https://www.googleapis.com/auth/script.external_request",
+    "https://www.googleapis.com/auth/firebase.database",
+    "https://www.googleapis.com/auth/userinfo.email"
+  ]
+}
+```
+
+Poi salva e **ripubblica il deployment**. Alla prima esecuzione Google
+chiederà di nuovo l'autorizzazione, perché i permessi sono cambiati.
+
+> ⚠️ **Lo script e il progetto Firebase devono appartenere allo stesso
+> account Google.** Se hai creato lo script con un account e Firebase con
+> un altro, la lettura fallisce e tutte le notifiche finiranno
+> all'indirizzo di ripiego. In quel caso sposta lo script sull'account
+> del gruppo.
+
+**Gli indirizzi si gestiscono dal pannello**, scheda *Destinatari*: si
+aggiungono e si tolgono senza toccare questo script. Il limite è 8.
+
+### Dove arriva cosa
+
+| Argomento scelto nel modulo | Destinatari |
+|---|---|
+| Informazioni generali | gruppo |
+| Iscrizioni | gruppo |
+| **Richiesta di ospitalità** | **gruppo + Branco + Reparto + Clan** |
+| Contattare il Branco | gruppo + Branco |
+| Contattare il Reparto | gruppo + Reparto |
+| Contattare Clan e Noviziato | gruppo + Clan |
+| Comunità Capi | gruppo |
+| Proposta di collaborazione | gruppo + Clan |
+| Altro | gruppo |
+
+L'ospitalità va a tutti di proposito: sono richieste che conviene
+qualcuno legga in fretta, e non si sa in anticipo quale branca abbia la
+sede libera.
+
+La CoCa usa la casella del gruppo: il filtro anti-doppioni evita che lo
+stesso messaggio arrivi due volte.
 
 Il campo `replyTo` fa sì che rispondendo alla notifica si scriva
 direttamente a chi ha contattato, senza copiare l'indirizzo a mano.

@@ -5,13 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
 <title>Gestione contenuti · Pino Torinese 1</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
   --verde:#1a3a2a; --verde-m:#2d5e42; --verde-s:#2e7d32; --giallo:#f5c800;
   --fuoco:#e8692a; --avorio:#f7f4ed; --avorio-s:#ede9de;
   --testo:#1c2b20; --muted:#5a6e5f; --border:#dde5d8;
+  --testo-font:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  --titolo-font:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
   --rosso:#c0392b;
   --radius:14px;
   --r-pillola:980px;
@@ -19,7 +20,7 @@
   --ombra-1:0 1px 2px rgba(20,35,25,0.04), 0 4px 12px rgba(20,35,25,0.05);
   --ombra-2:0 2px 6px rgba(20,35,25,0.06), 0 12px 32px rgba(20,35,25,0.08);
 }
-body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Roboto,'Inter',sans-serif;background:var(--avorio);color:var(--testo);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+body{font-family:var(--testo-font);background:var(--avorio);color:var(--testo);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 
 /* L'attributo hidden deve vincere su qualsiasi display dichiarato
    più sotto (.login-wrap è flex, .stato è flex, .hint è flex):
@@ -29,7 +30,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Robot
 /* ── RIBBON + TOPBAR ── */
 .ribbon{height:4px;background:linear-gradient(90deg,var(--verde-s) 50%,var(--giallo) 50%);}
 .topbar{height:58px;background:rgba(26,58,42,0.82);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);display:flex;align-items:center;padding:0 1.25rem;gap:1rem;position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(255,255,255,0.08);}
-.topbar h1{font-family:'Playfair Display',serif;color:#fff;font-size:1rem;font-weight:700;line-height:1.15;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.topbar h1{font-family:var(--titolo-font);letter-spacing:-0.02em;color:#fff;font-size:1rem;font-weight:700;line-height:1.15;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .topbar h1 span{display:block;font-family:'Inter',sans-serif;font-size:.68rem;font-weight:400;opacity:.6;text-transform:uppercase;letter-spacing:.08em;}
 .topbar .right{margin-left:auto;display:flex;align-items:center;gap:10px;min-width:0;}
 .utente{color:rgba(255,255,255,.7);font-size:.8rem;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
@@ -44,7 +45,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Robot
 /* ── LOGIN ── */
 .login-wrap{min-height:calc(100vh - 60px);display:flex;align-items:center;justify-content:center;padding:1.5rem;}
 .login-card{background:#fff;border:1px solid var(--filo);border-radius:20px;padding:2rem;max-width:380px;width:100%;box-shadow:0 8px 40px rgba(26,58,42,.10);}
-.login-card h2{font-family:'Playfair Display',serif;color:var(--verde);font-size:1.3rem;margin-bottom:.4rem;}
+.login-card h2{font-family:var(--titolo-font);letter-spacing:-0.02em;color:var(--verde);font-size:1.3rem;margin-bottom:.4rem;}
 .login-card p.sub{font-size:.85rem;color:var(--muted);margin-bottom:1.5rem;}
 
 /* ── LAYOUT ── */
@@ -58,7 +59,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Robot
 .sezione{display:none;}
 .sezione.active{display:block;}
 .sez-head{display:flex;align-items:center;gap:12px;margin-bottom:1rem;flex-wrap:wrap;}
-.sez-head h2{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--verde);margin-right:auto;}
+.sez-head h2{font-family:var(--titolo-font);letter-spacing:-0.02em;font-size:1.2rem;color:var(--verde);margin-right:auto;}
 .hint{background:#fff8e1;border:1px solid #ffe082;border-radius:var(--radius);padding:12px 14px;font-size:.82rem;color:#5d4037;margin-bottom:1rem;display:flex;gap:10px;align-items:flex-start;}
 .hint button{margin-left:auto;background:none;border:none;cursor:pointer;color:#8d6e63;font-size:1rem;flex-shrink:0;}
 
@@ -93,7 +94,7 @@ textarea{resize:vertical;min-height:80px;line-height:1.6;}
 /* ── LISTA CAPI ── */
 .branca-gruppo{margin-bottom:1.5rem;}
 .branca-titolo{display:flex;align-items:center;gap:12px;margin-bottom:.6rem;}
-.branca-titolo h3{font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--verde);white-space:nowrap;}
+.branca-titolo h3{font-family:var(--titolo-font);letter-spacing:-0.02em;font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--verde);white-space:nowrap;}
 .branca-titolo .linea{flex:1;height:1px;background:var(--border);}
 .branca-titolo .conta{font-size:.72rem;color:var(--muted);}
 
@@ -129,7 +130,7 @@ textarea{resize:vertical;min-height:80px;line-height:1.6;}
 .overlay.open{display:flex;}
 .modale{background:#fff;border-radius:20px;width:100%;max-width:520px;box-shadow:0 20px 60px rgba(0,0,0,.2);margin:auto;}
 .modale-head{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
-.modale-head h3{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--verde);}
+.modale-head h3{font-family:var(--titolo-font);letter-spacing:-0.02em;font-size:1.1rem;color:var(--verde);}
 .modale-body{padding:20px 22px;}
 .modale-foot{padding:14px 22px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;}
 .chiudi{background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--muted);padding:4px;}
@@ -249,6 +250,7 @@ textarea{resize:vertical;min-height:80px;line-height:1.6;}
     <button class="tab" data-sez="avvisi">Avvisi</button>
     <button class="tab" data-sez="richieste">Richieste<span class="badge-tab" id="badge-rich" hidden>0</span></button>
     <button class="tab" data-sez="messaggi">Messaggi<span class="badge-tab" id="badge-msg" hidden>0</span></button>
+    <button class="tab" data-sez="destinatari">Destinatari</button>
   </div>
 
   <!-- ─── CAPI ─── -->
@@ -343,6 +345,19 @@ textarea{resize:vertical;min-height:80px;line-height:1.6;}
     </div>
     <p class="aiuto" style="margin-bottom:1rem;">Arrivano dal modulo "Scrivici" nella pagina contatti. Sono anche inoltrati per e-mail, questa è la copia di sicurezza.</p>
     <div id="lista-messaggi"></div>
+  </div>
+
+  <!-- ─── DESTINATARI ─── -->
+  <div class="sezione" id="sez-destinatari">
+    <div class="sez-head">
+      <h2>Chi riceve le comunicazioni</h2>
+      <button class="btn btn-primary" id="btn-nuovo-dest">＋ Aggiungi indirizzo</button>
+    </div>
+    <div class="privacy-nota">
+      <span>📬</span>
+      <div>Questi indirizzi ricevono i messaggi dal modulo contatti e le pre-iscrizioni. <strong>Non sono visibili sul sito</strong>: restano nel database protetto e li legge solo lo script che spedisce le mail. Massimo 8.</div>
+    </div>
+    <div id="lista-destinatari"></div>
   </div>
 
 </div>
@@ -467,6 +482,44 @@ textarea{resize:vertical;min-height:80px;line-height:1.6;}
   </div>
 </div>
 
+<!-- ══════════ MODALE DESTINATARIO ══════════ -->
+<div class="overlay" id="modale-dest">
+  <div class="modale">
+    <div class="modale-head">
+      <div><h3 id="dest-tit">Nuovo indirizzo</h3><p>Riceverà le comunicazioni scelte qui sotto.</p></div>
+      <button class="chiudi" onclick="chiudiModale('modale-dest')">✕</button>
+    </div>
+    <div class="modale-body">
+      <div class="riga due">
+        <div class="campo">
+          <label for="dest-email">Indirizzo e-mail *</label>
+          <input type="email" id="dest-email" placeholder="nome@esempio.it" autocomplete="off">
+        </div>
+        <div class="campo">
+          <label for="dest-etichetta">A chi corrisponde</label>
+          <input type="text" id="dest-etichetta" placeholder="es. Branco Mirfak" autocomplete="off">
+        </div>
+      </div>
+
+      <label class="check" style="margin-bottom:14px;">
+        <input type="checkbox" id="dest-sempre">
+        <span>Riceve <strong>tutto</strong>, comprese le pre-iscrizioni</span>
+      </label>
+      <p class="aiuto" style="margin:-8px 0 16px;">Da tenere acceso per la casella principale del gruppo. Per le branche conviene spegnerlo e scegliere sotto.</p>
+
+      <div id="dest-argomenti-box">
+        <label style="font-size:.85rem;font-weight:550;display:block;margin-bottom:8px;">Riceve anche questi argomenti dal modulo contatti</label>
+        <div id="dest-argomenti" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;"></div>
+      </div>
+    </div>
+    <div class="modale-foot">
+      <button class="btn btn-danger" id="btn-elimina-dest" hidden>Elimina</button>
+      <button class="btn btn-outline" onclick="chiudiModale('modale-dest')">Annulla</button>
+      <button class="btn btn-verde" id="btn-salva-dest">Salva</button>
+    </div>
+  </div>
+</div>
+
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut }
@@ -488,6 +541,7 @@ const DATA = {
   foto:       {},   // { idCapo: 'data:image/jpeg;base64,...' } — ramo separato
   richieste:  {},   // dati personali di minori — lettura protetta dalle regole
   messaggi:   {},   // messaggi dal modulo contatti
+  destinatari:{},   // chi riceve le notifiche — ramo protetto
   pronto:     false
 };
 
@@ -496,6 +550,7 @@ let avvisoInModifica = null;
 let richInModifica   = null;
 let filtroStato      = '';
 let msgInModifica    = null;
+let destInModifica   = null;
 let fotoInAttesa     = undefined;   // undefined = invariata, null = da togliere, stringa = nuova
 
 const app  = initializeApp(FIREBASE_CONFIG);
@@ -598,6 +653,11 @@ function avviaAscolto() {
     console.error('[PT] lettura richieste fallita:', errore);
   });
 
+  onValue(ref(db, 'config/destinatari'), snap => {
+    DATA.destinatari = snap.val() || {};
+    renderDestinatari();
+  }, e => console.error('[PT] lettura destinatari fallita:', e));
+
   onValue(ref(db, 'messaggi'), snap => {
     DATA.messaggi = snap.val() || {};
     renderMessaggi();
@@ -627,6 +687,7 @@ function render() {
   renderAvvisi();
   renderRichieste();
   renderMessaggi();
+  renderDestinatari();
 }
 
 function renderCapi() {
@@ -1330,6 +1391,171 @@ document.getElementById('btn-elimina-msg').addEventListener('click', async () =>
     alert('Eliminazione non riuscita: ' + e.message);
   }
 });
+
+
+/* ═══════════════════════════════════════════════════════
+   DESTINATARI DELLE COMUNICAZIONI
+
+   Vivono in /config/destinatari, ramo con lettura chiusa:
+   né il sito né un visitatore possono leggerli. Li legge lo
+   script Apps Script, che si autentica come proprietario del
+   progetto Firebase.
+   ═══════════════════════════════════════════════════════ */
+
+const MAX_DESTINATARI = 8;
+
+const ARGOMENTI = {
+  informazioni:   'Informazioni generali',
+  iscrizioni:     'Iscrizioni',
+  ospitalita:     'Richiesta ospitalità',
+  branco:         'Contatta il Branco',
+  reparto:        'Contatta il Reparto',
+  clan:           'Contatta Clan e Noviziato',
+  coca:           'Comunità Capi',
+  collaborazione: 'Proposta di collaborazione',
+  altro:          'Altro'
+};
+
+/* Le caselle degli argomenti si costruiscono una volta sola. */
+(function preparaArgomenti() {
+  const box = document.getElementById('dest-argomenti');
+  box.innerHTML = Object.entries(ARGOMENTI).map(([k, t]) => `
+    <label class="check" style="padding:7px 10px;">
+      <input type="checkbox" value="${k}" class="arg-check">
+      <span style="font-size:.82rem;">${t}</span>
+    </label>`).join('');
+})();
+
+function elencoDestinatari() {
+  return Object.entries(DATA.destinatari)
+    .map(([id, d]) => ({ id, ...d }))
+    .sort((a, b) => (b.sempre === true) - (a.sempre === true) ||
+                    (a.etichetta || a.email).localeCompare(b.etichetta || b.email));
+}
+
+function renderDestinatari() {
+  const lista = elencoDestinatari();
+  const cont = document.getElementById('lista-destinatari');
+  const btn  = document.getElementById('btn-nuovo-dest');
+
+  // Il limite si fa rispettare qui, non solo a parole.
+  btn.disabled = lista.length >= MAX_DESTINATARI;
+  btn.title = btn.disabled ? `Massimo ${MAX_DESTINATARI} indirizzi` : '';
+
+  if (!lista.length) {
+    cont.innerHTML = `<div class="vuoto"><div class="ic">📭</div>
+      <p>Nessun indirizzo configurato.<br>Senza almeno uno, le notifiche non partono.</p></div>`;
+    return;
+  }
+
+  cont.innerHTML = lista.map(d => {
+    const argomenti = (d.argomenti || '').split(',').filter(Boolean);
+    const cosa = d.sempre
+      ? '<span class="st st-accolta">Riceve tutto</span>'
+      : argomenti.length
+        ? argomenti.map(a => `<span class="st st-non-accolta">${esc(ARGOMENTI[a] || a)}</span>`).join(' ')
+        : '<span class="st st-nuova">Non riceve nulla</span>';
+
+    return `<div class="rich-riga" data-dest="${d.id}">
+      <div class="rich-info">
+        <div class="nome">${esc(d.etichetta || d.email)}</div>
+        <div class="meta">${esc(d.email)}</div>
+        <div style="margin-top:6px;display:flex;gap:5px;flex-wrap:wrap;">${cosa}</div>
+      </div>
+      <div class="rich-dx"><button class="icona">✏️</button></div>
+    </div>`;
+  }).join('');
+
+  cont.querySelectorAll('[data-dest]').forEach(el =>
+    el.onclick = () => apriDestinatario(el.dataset.dest));
+}
+
+function apriDestinatario(id) {
+  destInModifica = id;
+  const d = id ? DATA.destinatari[id] : null;
+
+  document.getElementById('dest-tit').textContent = id ? 'Modifica indirizzo' : 'Nuovo indirizzo';
+  document.getElementById('dest-email').value     = d?.email || '';
+  document.getElementById('dest-etichetta').value = d?.etichetta || '';
+  document.getElementById('dest-sempre').checked  = !!d?.sempre;
+  document.getElementById('btn-elimina-dest').hidden = !id;
+
+  const scelti = (d?.argomenti || '').split(',').filter(Boolean);
+  document.querySelectorAll('.arg-check').forEach(c => { c.checked = scelti.includes(c.value); });
+
+  aggiornaVisibilitaArgomenti();
+  apriModale('modale-dest');
+  setTimeout(() => document.getElementById('dest-email').focus(), 50);
+}
+
+/* Chi riceve tutto non ha bisogno di scegliere: l'elenco sparisce
+   invece di restare lì a confondere. */
+document.getElementById('dest-sempre').addEventListener('change', aggiornaVisibilitaArgomenti);
+function aggiornaVisibilitaArgomenti() {
+  const tutto = document.getElementById('dest-sempre').checked;
+  document.getElementById('dest-argomenti-box').style.display = tutto ? 'none' : 'block';
+}
+
+document.getElementById('btn-salva-dest').addEventListener('click', async () => {
+  const email = document.getElementById('dest-email').value.trim().toLowerCase();
+
+  if (!email.includes('@') || email.length < 5) {
+    return alert('Controlla l\'indirizzo e-mail.');
+  }
+
+  // Due volte lo stesso indirizzo significa due copie di ogni mail.
+  const doppio = elencoDestinatari().find(d => d.email === email && d.id !== destInModifica);
+  if (doppio) {
+    return alert(`${email} è già nell'elenco come "${doppio.etichetta || doppio.email}".`);
+  }
+
+  const sempre = document.getElementById('dest-sempre').checked;
+  const argomenti = sempre ? '' : Array.from(document.querySelectorAll('.arg-check:checked'))
+    .map(c => c.value).join(',');
+
+  if (!sempre && !argomenti) {
+    if (!confirm('Questo indirizzo non riceverà nulla.\n\nSalvare comunque?')) return;
+  }
+
+  const dati = {
+    email,
+    etichetta: document.getElementById('dest-etichetta').value.trim(),
+    sempre,
+    argomenti
+  };
+
+  segnalaStato('salvando');
+  try {
+    if (destInModifica) {
+      await update(ref(db, `config/destinatari/${destInModifica}`), dati);
+    } else {
+      if (elencoDestinatari().length >= MAX_DESTINATARI) {
+        return alert(`Hai già ${MAX_DESTINATARI} indirizzi. Eliminane uno prima di aggiungerne altri.`);
+      }
+      await push(ref(db, 'config/destinatari'), dati);
+    }
+    chiudiModale('modale-dest');
+  } catch (e) {
+    segnalaStato('errore');
+    alert('Salvataggio non riuscito: ' + e.message);
+  }
+});
+
+document.getElementById('btn-elimina-dest').addEventListener('click', async () => {
+  const d = DATA.destinatari[destInModifica];
+  if (!confirm(`Togliere ${d.email} dai destinatari?\n\nNon riceverà più le comunicazioni dal sito.`)) return;
+
+  segnalaStato('salvando');
+  try {
+    await remove(ref(db, `config/destinatari/${destInModifica}`));
+    chiudiModale('modale-dest');
+  } catch (e) {
+    segnalaStato('errore');
+    alert('Eliminazione non riuscita: ' + e.message);
+  }
+});
+
+document.getElementById('btn-nuovo-dest').addEventListener('click', () => apriDestinatario(null));
 
 
 /* ═══════════════════════════════════════════════════════

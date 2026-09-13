@@ -168,6 +168,30 @@
         }
       }
     },
+    "config": {
+      "destinatari": {
+        ".read": "auth != null",
+        ".write": "auth != null",
+        "$voce": {
+          ".validate": "newData.hasChildren(['email'])",
+          "email": {
+            ".validate": "newData.isString() && newData.val().contains('@') && newData.val().length >= 5 && newData.val().length <= 120"
+          },
+          "etichetta": {
+            ".validate": "newData.isString() && newData.val().length <= 60"
+          },
+          "sempre": {
+            ".validate": "newData.isBoolean()"
+          },
+          "argomenti": {
+            ".validate": "newData.isString() && newData.val().length <= 200"
+          },
+          "$altro": {
+            ".validate": false
+          }
+        }
+      }
+    },
     "$resto": {
       ".read": false,
       ".write": false

@@ -60,7 +60,6 @@
 }
 </script>
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -102,8 +101,16 @@
 }
 html { scroll-behavior: smooth; scroll-padding-top: 80px; }
 body { overflow-x: hidden; }
+/* Famiglia di sistema: SF Pro su iPhone e Mac, Segoe su Windows,
+   Roboto su Android. Nessun carattere da scaricare, quindi il testo
+   compare subito invece di apparire a pagina già disegnata. */
+:root {
+  --testo-font: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --titolo-font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, 'Inter', sans-serif;
+  font-family: var(--testo-font);
   background: var(--avorio);
   color: var(--testo);
   line-height: 1.65;
@@ -129,7 +136,7 @@ nav {
 .nav-logo { height: 42px; width: auto; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .nav-logo img { height: 42px; width: auto; display: block; }
   .logo-ripiego { background: var(--fuoco); color: #fff; font-weight: 700; font-size: 0.82rem; padding: 9px 10px; border-radius: 8px; letter-spacing: 0.04em; }
-.nav-title { color: white; font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; line-height: 1.2; }
+.nav-title { color: white;  font-size: 1rem; font-weight: 700; line-height: 1.2; }
 .nav-title span { display: block; font-size: 0.72rem; font-weight: 400; opacity: 0.75; font-family: 'Inter', sans-serif; letter-spacing: 0.08em; text-transform: uppercase; }
 .nav-links { display: flex; gap: 0; list-style: none; align-items: center; }
 .nav-links li { position: relative; }
@@ -184,20 +191,20 @@ nav {
 }
 .hero-eyebrow { display: inline-block; background: rgba(255,255,255,0.16); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.22); color: #fff; font-size: 0.8rem; font-weight: 530; letter-spacing: -0.005em; padding: 6px 16px; border-radius: var(--r-pillola); margin-bottom: 1.4rem; position: relative; }
 .hero h1 {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: var(--titolo-font);
   color: #fff;
-  font-size: clamp(2.3rem, 5.5vw, 3.9rem);
-  font-weight: 900;
-  line-height: 1.05;
-  letter-spacing: -0.022em;
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  font-weight: 800;
+  line-height: 1.03;
+  letter-spacing: -0.035em;
   margin-bottom: 1.1rem;
   position: relative;
-  text-shadow: 0 2px 20px rgba(0,0,0,0.25);
+  text-shadow: 0 2px 24px rgba(0,0,0,0.28);
 }
 .hero p { color: rgba(255,255,255,0.65); font-size: 1.05rem; max-width: 560px; margin: 0 auto 2rem; line-height: 1.75; position: relative; }
 .hero-stats { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; position: relative; margin-top: 1rem; }
 .stat-box { text-align: center; }
-.stat-num { font-family: 'Playfair Display', serif; font-size: 2.8rem; font-weight: 900; color: var(--fuoco); line-height: 1; }
+.stat-num {  font-size: 2.8rem; font-weight: 900; color: var(--fuoco); line-height: 1; }
 .stat-label { font-size: 0.75rem; color: rgba(255,255,255,0.55); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }
 .hero-cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 2rem; position: relative; }
 .btn-primary {
@@ -228,7 +235,7 @@ nav {
 .container { max-width: 960px; margin: 0 auto; padding: 0 2rem; }
 .section { padding: 4rem 0; }
 .section-label { display: flex; align-items: center; gap: 16px; margin-bottom: 1.5rem; }
-.section-label h3 {
+.section-label h3 { font-family: var(--titolo-font);
   font-family: inherit;
   font-size: 1.25rem;
   font-weight: 680;
@@ -253,10 +260,10 @@ nav {
 .card.featured { border-color: var(--fuoco); border-width: 2px; }
 .card-photo { width: 100%; aspect-ratio: 3/2; background: var(--avorio-scuro); display: flex; align-items: center; justify-content: center; overflow: hidden; }
 .card-photo img { width: 100%; height: 100%; object-fit: cover; object-position: top; filter: grayscale(20%); }
-.card-photo .initials { width: 56px; height: 56px; border-radius: 50%; background: var(--verde-medio); color: white; font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.card-photo .initials { width: 56px; height: 56px; border-radius: 50%; background: var(--verde-medio); color: white;  font-size: 1.4rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
 .card-body { padding: 12px 14px 14px; }
 .card-role { font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; color: var(--verde); margin-bottom: 4px; }
-.card-name {
+.card-name { font-family: var(--titolo-font);
   font-family: inherit;
   font-size: 1.02rem;
   font-weight: 620;
@@ -278,7 +285,7 @@ nav {
 .branca-card:hover { transform: translateY(-4px); box-shadow: var(--ombra-3); }
 .branca-card-top { padding: 28px 24px 20px; }
 .branca-card-top .age-badge { display: inline-block; background: var(--avorio); color: var(--verde); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; padding: 4px 10px; border-radius: 2px; border: 1px solid var(--verde); margin-bottom: 14px; }
-.branca-card-top h3 {
+.branca-card-top h3 { font-family: var(--titolo-font);
   font-family: inherit;
   font-size: 1.3rem;
   font-weight: 680;
@@ -301,7 +308,7 @@ nav {
   padding: 26px;
   box-shadow: var(--ombra-1);
 }
-.info-box h4 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--verde); font-weight: 700; margin-bottom: 12px; }
+.info-box h4 { font-family: var(--titolo-font);  font-size: 1.1rem; color: var(--verde); font-weight: 700; margin-bottom: 12px; }
 .info-box p, .info-box a { font-size: 0.9rem; color: var(--testo-muted); line-height: 1.8; text-decoration: none; display: block; }
 .info-box a:hover { color: var(--fuoco); }
 .info-box .highlight { color: var(--fuoco); font-weight: 600; font-size: 0.85rem; letter-spacing: 0.04em; }
@@ -309,7 +316,7 @@ nav {
 /* ISCRIZIONI PAGE */
 .iscrizioni-banner { background: var(--verde); color: #fff; border-radius: var(--r-grande); padding: 30px 34px; margin-bottom: 2rem; box-shadow: var(--ombra-2); }
 .iscrizioni-banner .open-badge { display: inline-block; background: var(--fuoco); color: white; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; padding: 5px 14px; border-radius: 2px; margin-bottom: 16px; }
-.iscrizioni-banner h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; margin-bottom: 12px; }
+.iscrizioni-banner h2 { font-family: var(--titolo-font); letter-spacing: -0.028em;  font-size: 1.8rem; font-weight: 700; margin-bottom: 12px; }
 .iscrizioni-banner p { color: rgba(255,255,255,0.75); font-size: 0.95rem; line-height: 1.75; max-width: 600px; }
 .steps { display: flex; flex-direction: column; gap: 16px; margin: 2rem 0; }
 .step {
@@ -321,7 +328,7 @@ nav {
   box-shadow: var(--ombra-1);
 }
 .step-num { width: 36px; height: 36px; background: var(--fuoco); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; flex-shrink: 0; margin-top: 2px; }
-.step h4 { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--verde); font-weight: 700; margin-bottom: 4px; }
+.step h4 { font-family: var(--titolo-font);  font-size: 1rem; color: var(--verde); font-weight: 700; margin-bottom: 4px; }
 .step p { font-size: 0.88rem; color: var(--testo-muted); line-height: 1.6; }
 
 /* DOVE SIAMO */
@@ -343,7 +350,7 @@ nav {
 
 /* SECTION TEXT */
 .section-text { max-width: 680px; }
-.section-text h2 {
+.section-text h2 { font-family: var(--titolo-font);
   font-family: inherit;
   font-size: clamp(1.6rem, 3vw, 2.1rem);
   font-weight: 700;
@@ -354,7 +361,7 @@ nav {
 }
 .section-text h2 em { color: var(--fuoco); font-style: normal; }
 .section-text p { color: var(--testo-muted); font-size: 0.95rem; margin-bottom: 1rem; line-height: 1.75; }
-.section-text .quote { border-left: 3px solid var(--fuoco); padding-left: 20px; margin: 1.5rem 0; font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.05rem; color: var(--verde); line-height: 1.6; }
+.section-text .quote { border-left: 3px solid var(--fuoco); padding-left: 20px; margin: 1.5rem 0;  font-style: italic; font-size: 1.05rem; color: var(--verde); line-height: 1.6; }
 
 /* HOME HERO IMAGE STRIP */
 .img-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; height: 230px; overflow: hidden; border-radius: var(--r-grande); margin: 2rem 0; box-shadow: var(--ombra-2); }
@@ -367,7 +374,7 @@ nav {
 /* FOOTER */
 footer { background: var(--verde); color: rgba(255,255,255,0.7); padding: 3rem 2rem; margin-top: 5rem; }
 .footer-inner { max-width: 960px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem; }
-footer h4 { color: white; font-family: 'Playfair Display', serif; font-weight: 700; margin-bottom: 1rem; font-size: 1rem; }
+footer h4 { font-family: var(--titolo-font); color: white;  font-weight: 700; margin-bottom: 1rem; font-size: 1rem; }
 footer p, footer a { font-size: 0.85rem; line-height: 1.8; color: rgba(255,255,255,0.6); text-decoration: none; }
 footer a:hover { color: var(--fuoco-chiaro); }
 .footer-bottom { max-width: 960px; margin: 2rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; color: rgba(255,255,255,0.4); flex-wrap: wrap; gap: 8px; }
@@ -431,7 +438,7 @@ h1, h2, h3, .section-label { scroll-margin-top: 88px; }
 }
 /* ── AVVISI (home) ── */
 .avviso { background:rgba(255,244,214,0.85); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); border:1px solid rgba(240,190,60,0.35); border-radius:var(--r-medio); padding:16px 20px; margin-bottom:12px; box-shadow:var(--ombra-1); }
-.avviso h4 { font-family:'Playfair Display',serif; font-size:1rem; color:#5d4037; margin-bottom:4px; }
+.avviso h4 { font-family: var(--titolo-font);  font-size:1rem; color:#5d4037; margin-bottom:4px; }
 .avviso p { font-size:0.88rem; color:#6d4c41; line-height:1.65; }
 
 /* ── STATO CARICAMENTO ── */
@@ -451,7 +458,7 @@ h1, h2, h3, .section-label { scroll-margin-top: 88px; }
   margin-top: 2rem;
   box-shadow: var(--ombra-2);
 }
-.modulo h3 { font-family:'Playfair Display',serif; font-size:1.25rem; color:var(--verde); margin-bottom:6px; }
+.modulo h3 { font-family: var(--titolo-font);  font-size:1.25rem; color:var(--verde); margin-bottom:6px; }
 .modulo > p.intro { font-size:0.88rem; color:var(--testo-muted); margin-bottom:1.5rem; }
 .campo-form { display:flex; flex-direction:column; gap:5px; margin-bottom:16px; }
 .campo-form label {
@@ -498,7 +505,7 @@ h1, h2, h3, .section-label { scroll-margin-top: 88px; }
 .esito-invio { border-radius:var(--r-medio); padding:18px 20px; font-size:0.94rem; line-height:1.6; }
 .esito-ok { background:#d4edda; border:1px solid #c3e6cb; color:#155724; }
 .esito-ko { background:#f8d7da; border:1px solid #f5c6cb; color:#721c24; }
-.esito-invio h4 { font-family:'Playfair Display',serif; font-size:1.05rem; margin-bottom:4px; }
+.esito-invio h4 {  font-size:1.05rem; margin-bottom:4px; }
 
 /* ── INFORMATIVA ── */
 .informativa { background:var(--avorio); border-left:3px solid var(--verde-medio); border-radius:6px; padding:16px 18px; margin-top:1.5rem; font-size:0.8rem; color:var(--testo-muted); line-height:1.7; }
