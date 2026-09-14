@@ -168,6 +168,7 @@ nav {
 .hero--iscrizioni{ background-image: url('img/home-clan.jpg'); }
 .hero--dove      { background-image: url('img/home-natura.jpg'); }
 .hero--contatti  { background-image: url('img/home-coca.jpg'); }
+.hero--calendario{ background-image: url('img/home-natura.jpg'); }
 
 /* HERO */
 .hero {
@@ -281,9 +282,14 @@ nav {
   overflow: hidden; cursor: pointer;
   box-shadow: var(--ombra-1);
   transition: transform 0.25s cubic-bezier(0.2,0.9,0.3,1), box-shadow 0.25s;
+  display: flex;
+  flex-direction: column;
 }
 .branca-card:hover { transform: translateY(-4px); box-shadow: var(--ombra-3); }
-.branca-card-top { padding: 28px 24px 20px; }
+.branca-card-top {
+  padding: 26px 24px 20px;
+  flex: 1;
+}
 .branca-card-top .age-badge { display: inline-block; background: var(--avorio); color: var(--verde); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; padding: 4px 10px; border-radius: 2px; border: 1px solid var(--verde); margin-bottom: 14px; }
 .branca-card-top h3 { font-family: var(--titolo-font);
   font-family: inherit;
@@ -295,7 +301,14 @@ nav {
   margin-bottom: 8px;
 }
 .branca-card-top p { font-size: 0.88rem; color: var(--testo-muted); line-height: 1.65; }
-.branca-card-bottom { padding: 14px 24px; background: var(--verde); display: flex; align-items: center; justify-content: space-between; }
+.branca-card-bottom {
+  padding: 14px 24px;
+  background: var(--verde);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+}
 .branca-card-bottom span { color: white; font-size: 0.82rem; font-weight: 500; }
 .branca-card-bottom .arrow { color: var(--fuoco-chiaro); font-size: 1.1rem; }
 
@@ -449,6 +462,28 @@ h1, h2, h3, .section-label { scroll-margin-top: 88px; }
 .iscrizioni-banner.chiuse { background:var(--testo-muted); }
 .iscrizioni-banner .closed-badge { display:inline-block; background:rgba(255,255,255,0.2); color:#fff; font-size:0.7rem; letter-spacing:0.12em; text-transform:uppercase; font-weight:700; padding:5px 14px; border-radius:2px; margin-bottom:16px; }
 
+/* ── CALENDARIO ── */
+.mese { margin-bottom: 2rem; }
+.mese-nome { font-family: var(--titolo-font); font-size: 1.15rem; font-weight: 640; letter-spacing: -0.02em; color: var(--verde); text-transform: capitalize; margin-bottom: 0.9rem; padding-bottom: 8px; border-bottom: 1px solid var(--filo); }
+.evento { background:#fff; border:1px solid var(--filo); border-radius:var(--r-medio); box-shadow:var(--ombra-1); padding:16px 18px; margin-bottom:10px; display:flex; gap:16px; align-items:flex-start; }
+.ev-data { flex-shrink:0; width:54px; text-align:center; background:var(--avorio); border-radius:11px; padding:8px 4px; }
+.ev-giorno { font-family:var(--titolo-font); font-size:1.4rem; font-weight:700; line-height:1; color:var(--verde); letter-spacing:-0.03em; }
+.ev-mese { font-size:0.68rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--testo-muted); margin-top:3px; }
+.ev-corpo { flex:1; min-width:0; }
+.ev-titolo { font-family:var(--titolo-font); font-size:1.02rem; font-weight:620; letter-spacing:-0.015em; color:var(--testo); }
+.ev-meta { font-size:0.84rem; color:var(--testo-muted); margin-top:3px; display:flex; gap:12px; flex-wrap:wrap; }
+.ev-note { font-size:0.86rem; color:var(--testo-muted); margin-top:7px; line-height:1.55; }
+.ev-branca { display:inline-block; font-size:0.72rem; font-weight:560; padding:3px 11px; border-radius:var(--r-pillola); white-space:nowrap; }
+.b-tutti{background:rgba(26,58,42,.08);color:var(--verde);}
+.b-branco{background:#fff8e1;color:#8a6100;}
+.b-reparto{background:#e3f2fd;color:#0f4c81;}
+.b-noviziato{background:#f3e5f5;color:#6a1b9a;}
+.b-clan{background:#fce4ec;color:#880e4f;}
+.b-gruppo{background:#e0f2f1;color:#00463c;}
+.filtri-cal { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:1.5rem; }
+.fc { padding:6px 14px; border-radius:var(--r-pillola); font-size:0.85rem; font-weight:500; cursor:pointer; border:1px solid var(--filo); background:#fff; color:var(--testo-muted); transition:all .15s; }
+.fc:hover, .fc.on { background:var(--verde); color:#fff; border-color:var(--verde); }
+
 /* ── MODULO ISCRIZIONE ── */
 .modulo {
   background: #fff;
@@ -499,7 +534,12 @@ h1, h2, h3, .section-label { scroll-margin-top: 88px; }
   margin: 1.4rem 0;
 }
 .consenso-box label { display:flex; gap:10px; align-items:flex-start; cursor:pointer; font-size:0.84rem; line-height:1.6; color:var(--testo); }
-.consenso-box input[type=checkbox] { width:auto; margin-top:3px; flex-shrink:0; }
+.consenso-box input[type=checkbox] {
+  width: 18px; height: 18px; min-width: 18px;
+  margin-top: 2px; flex-shrink: 0;
+  accent-color: var(--verde-scout);
+  cursor: pointer;
+}
 .consenso-box a { color:var(--fuoco); }
 .trappola { position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
 .esito-invio { border-radius:var(--r-medio); padding:18px 20px; font-size:0.94rem; line-height:1.6; }
@@ -579,6 +619,7 @@ h1, h2, h3, .section-label { scroll-margin-top: 88px; }
         <a onclick="showPage('noviziato')">Noviziato Silmaril</a>
       </div>
     </li>
+    <li id="voce-calendario" hidden><a onclick="showPage('calendario')" data-page="calendario">Calendario</a></li>
     <li><a onclick="showPage('iscrizioni')" data-page="iscrizioni">Iscrizioni</a></li>
     <li>
       <span onclick="showPage('contatti')" data-page="contatti">Contatti ▾</span>
@@ -1085,6 +1126,23 @@ h1, h2, h3, .section-label { scroll-margin-top: 88px; }
   </div>
 </div>
 
+<!-- ===================== CALENDARIO ===================== -->
+<div id="page-calendario" class="page">
+  <div class="fazzolettone"></div>
+  <div class="hero hero--calendario">
+    <div class="hero-eyebrow">Attività in programma</div>
+    <h1>Calendario</h1>
+    <p>Uscite, riunioni e campi delle nostre branche. Le date possono cambiare: in caso di dubbi scrivete ai capi.</p>
+  </div>
+  <div class="fazzolettone"></div>
+  <div class="container">
+    <div class="section">
+      <div class="filtri-cal" id="filtri-calendario"></div>
+      <div id="lista-calendario"></div>
+    </div>
+  </div>
+</div>
+
 <!-- FOOTER (shared) -->
 <footer id="shared-footer">
   <div class="footer-inner">
@@ -1129,7 +1187,7 @@ h1, h2, h3, .section-label { scroll-margin-top: 88px; }
 </footer>
 
 <script>
-const pages = ['home','gruppo','coca','branco','reparto','clan','noviziato','iscrizioni','dove','contatti'];
+const pages = ['home','gruppo','coca','branco','reparto','clan','noviziato','iscrizioni','dove','contatti','calendario'];
 const footer = document.getElementById('shared-footer');
 
 function showPage(id) {
@@ -1758,6 +1816,117 @@ function esitoContatti(riuscito) {
   }
 }
 
+/* ═══════════════════════════════════════════════════════════
+   CALENDARIO
+
+   Gli eventi arrivano già filtrati e ordinati da pt-config:
+   qui si occupa solo di raggrupparli per mese e disegnarli.
+   Se l'interruttore nel pannello è spento, la voce di menu
+   resta nascosta e la pagina non è raggiungibile.
+   ═══════════════════════════════════════════════════════════ */
+
+const BRANCHE_EVENTO = {
+  tutti:     'Tutto il gruppo',
+  branco:    'Branco Mirfak',
+  reparto:   'Reparto Everest',
+  noviziato: 'Noviziato Silmaril',
+  clan:      'Clan Zebrù',
+  gruppo:    'Comunità Capi'
+};
+
+let filtroCal = '';
+
+function renderCalendario() {
+  const attivo = DATA.impostazioni?.calendarioAttivo === true;
+  const voce = document.getElementById('voce-calendario');
+  if (voce) voce.hidden = !attivo;
+
+  // Se qualcuno ci arriva con la pagina aperta e poi viene spento,
+  // lo riportiamo alla home invece di lasciarlo su una pagina morta.
+  if (!attivo) {
+    const pag = document.getElementById('page-calendario');
+    if (pag?.classList.contains('active')) showPage('home');
+    return;
+  }
+
+  const eventi = DATA.calendario || [];
+
+  // I filtri mostrano solo le branche che hanno davvero qualcosa
+  const presenti = [...new Set(eventi.map(e => e.branca))];
+  const filtri = document.getElementById('filtri-calendario');
+  if (filtri) {
+    filtri.innerHTML = presenti.length > 1
+      ? `<div class="fc ${filtroCal ? '' : 'on'}" data-fc="">Tutte</div>` +
+        Object.entries(BRANCHE_EVENTO)
+          .filter(([k]) => presenti.includes(k))
+          .map(([k, n]) => `<div class="fc ${filtroCal === k ? 'on' : ''}" data-fc="${k}">${n}</div>`).join('')
+      : '';
+    filtri.querySelectorAll('[data-fc]').forEach(c => c.onclick = () => {
+      filtroCal = c.dataset.fc;
+      renderCalendario();
+    });
+  }
+
+  const lista = filtroCal ? eventi.filter(e => e.branca === filtroCal) : eventi;
+  const cont = document.getElementById('lista-calendario');
+  if (!cont) return;
+
+  if (!lista.length) {
+    cont.innerHTML = `<div class="caricamento">
+      ${eventi.length ? 'Nessuna attività in programma per questa branca.'
+                      : 'Nessuna attività in programma al momento. Torna a trovarci!'}
+    </div>`;
+    return;
+  }
+
+  // Raggruppamento per mese, mantenendo l'ordine cronologico
+  const mesi = new Map();
+  lista.forEach(e => {
+    const d = new Date(e.dataInizio);
+    const chiave = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+    if (!mesi.has(chiave)) mesi.set(chiave, []);
+    mesi.get(chiave).push(e);
+  });
+
+  cont.innerHTML = [...mesi.entries()].map(([chiave, gruppo]) => {
+    const [anno, mese] = chiave.split('-');
+    const nomeMese = new Date(anno, mese - 1).toLocaleDateString('it-IT', { month: 'long', year: 'numeric' });
+    return `<div class="mese">
+      <div class="mese-nome">${esc(nomeMese)}</div>
+      ${gruppo.map(schedaEvento).join('')}
+    </div>`;
+  }).join('');
+}
+
+function schedaEvento(e) {
+  const d = new Date(e.dataInizio);
+  const giorno = d.getDate();
+  const mese = d.toLocaleDateString('it-IT', { month: 'short' }).replace('.', '');
+
+  const durata = e.dataFine && e.dataFine !== e.dataInizio
+    ? ` – ${new Date(e.dataFine).toLocaleDateString('it-IT', { day: 'numeric', month: 'short' })}`
+    : '';
+
+  const meta = [];
+  if (e.ora)   meta.push(`🕐 ${esc(e.ora)}`);
+  if (e.luogo) meta.push(`📍 ${esc(e.luogo)}`);
+
+  return `<div class="evento">
+    <div class="ev-data">
+      <div class="ev-giorno">${giorno}</div>
+      <div class="ev-mese">${esc(mese)}</div>
+    </div>
+    <div class="ev-corpo">
+      <div style="display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;">
+        <span class="ev-titolo">${esc(e.titolo)}${durata}</span>
+        <span class="ev-branca b-${esc(e.branca)}">${esc(BRANCHE_EVENTO[e.branca] || e.branca)}</span>
+      </div>
+      ${meta.length ? `<div class="ev-meta">${meta.join('')}</div>` : ''}
+      ${e.note ? `<div class="ev-note">${esc(e.note)}</div>` : ''}
+    </div>
+  </div>`;
+}
+
 /* ─── AVVIO ─── */
 async function avvia() {
   DATA.capi.length = 0;
@@ -1766,6 +1935,7 @@ async function avvia() {
   renderCapi();
   renderIscrizioni();
   renderAvvisi();
+  renderCalendario();
 
   // I moduli esistono solo dopo il render: vanno collegati qui.
   collegaModulo();

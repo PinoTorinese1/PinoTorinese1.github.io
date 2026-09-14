@@ -77,6 +77,48 @@
           }
         }
       },
+      "calendario": {
+        ".write": "auth != null",
+        "$evento": {
+          ".validate": "newData.hasChildren(['titolo','branca','dataInizio'])",
+          "titolo": {
+            ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 100"
+          },
+          "branca": {
+            ".validate": "newData.val().matches(/^(tutti|gruppo|branco|reparto|noviziato|clan)$/)"
+          },
+          "dataInizio": {
+            ".validate": "newData.isString() && newData.val().matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)"
+          },
+          "dataFine": {
+            ".validate": "newData.isString() && (newData.val() == '' || newData.val().matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/))"
+          },
+          "ora": {
+            ".validate": "newData.isString() && newData.val().length <= 20"
+          },
+          "luogo": {
+            ".validate": "newData.isString() && newData.val().length <= 120"
+          },
+          "note": {
+            ".validate": "newData.isString() && newData.val().length <= 600"
+          },
+          "attivo": {
+            ".validate": "newData.isBoolean()"
+          },
+          "$altro": {
+            ".validate": false
+          }
+        }
+      },
+      "impostazioni": {
+        ".write": "auth != null",
+        "calendarioAttivo": {
+          ".validate": "newData.isBoolean()"
+        },
+        "$altro": {
+          ".validate": false
+        }
+      },
       "$altro": {
         ".validate": false
       }

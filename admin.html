@@ -81,14 +81,25 @@ body{font-family:var(--testo-font);background:var(--avorio);color:var(--testo);l
 /* ── FORM ── */
 .campo{display:flex;flex-direction:column;gap:4px;margin-bottom:14px;}
 .campo label{font-size:.85rem;font-weight:550;color:var(--testo);letter-spacing:-0.01em;}
-input,select,textarea{padding:11px 13px;border:1px solid transparent;border-radius:11px;font-size:0.95rem;font-family:inherit;color:var(--testo);background:rgba(120,140,125,0.09);outline:none;transition:background .18s,border-color .18s,box-shadow .18s;width:100%;-webkit-appearance:none;}
-input:focus,select:focus,textarea:focus{background:#fff;border-color:var(--verde-m);box-shadow:0 0 0 4px rgba(45,94,66,.13);}
+input:not([type=checkbox]):not([type=radio]):not([type=file]),select,textarea{padding:11px 13px;border:1px solid transparent;border-radius:11px;font-size:0.95rem;font-family:inherit;color:var(--testo);background:rgba(120,140,125,0.09);outline:none;transition:background .18s,border-color .18s,box-shadow .18s;width:100%;-webkit-appearance:none;}
+input:not([type=checkbox]):not([type=radio]):focus,select:focus,textarea:focus{background:#fff;border-color:var(--verde-m);box-shadow:0 0 0 4px rgba(45,94,66,.13);}
+
+/* Caselle di spunta: aspetto nativo, colorate col verde del gruppo.
+   accent-color le tinge senza doverle ridisegnare a mano. */
+input[type=checkbox]{
+  -webkit-appearance:auto; appearance:auto;
+  width:18px; height:18px; min-width:18px;
+  margin:0; padding:0; border:none; background:none;
+  accent-color:var(--verde-s); cursor:pointer; flex-shrink:0;
+}
 textarea{resize:vertical;min-height:80px;line-height:1.6;}
 .riga{display:grid;gap:14px;}
 .riga.due{grid-template-columns:1fr 1fr;}
 .aiuto{font-size:.72rem;color:var(--muted);}
 .check{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#fff;border:1px solid var(--border);border-radius:6px;cursor:pointer;}
-.check input{width:auto;margin:0;}
+.check{user-select:none;}
+.check:hover{border-color:var(--verde-m);}
+.check input{margin:0;}
 .check span{font-size:.85rem;font-weight:500;}
 
 /* ── LISTA CAPI ── */
@@ -203,6 +214,7 @@ textarea{resize:vertical;min-height:80px;line-height:1.6;}
   .capo-info .ruolo{display:none;}
 }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -250,6 +262,7 @@ textarea{resize:vertical;min-height:80px;line-height:1.6;}
     <button class="tab" data-sez="avvisi">Avvisi</button>
     <button class="tab" data-sez="richieste">Richieste<span class="badge-tab" id="badge-rich" hidden>0</span></button>
     <button class="tab" data-sez="messaggi">Messaggi<span class="badge-tab" id="badge-msg" hidden>0</span></button>
+    <button class="tab" data-sez="calendario">Calendario</button>
     <button class="tab" data-sez="destinatari">Destinatari</button>
   </div>
 
@@ -322,7 +335,8 @@ textarea{resize:vertical;min-height:80px;line-height:1.6;}
   <div class="sezione" id="sez-richieste">
     <div class="sez-head">
       <h2>Richieste di pre-iscrizione</h2>
-      <button class="btn btn-outline" id="btn-csv-rich">⬇ Esporta CSV</button>
+      <button class="btn btn-outline" id="btn-xlsx-rich">⬇ Excel</button>
+      <button class="btn btn-outline" id="btn-csv-rich">⬇ CSV</button>
     </div>
     <div class="privacy-nota">
       <span>🔒</span>
@@ -358,6 +372,25 @@ textarea{resize:vertical;min-height:80px;line-height:1.6;}
       <div>Questi indirizzi ricevono i messaggi dal modulo contatti e le pre-iscrizioni. <strong>Non sono visibili sul sito</strong>: restano nel database protetto e li legge solo lo script che spedisce le mail. Massimo 8.</div>
     </div>
     <div id="lista-destinatari"></div>
+  </div>
+
+  <!-- ─── CALENDARIO ─── -->
+  <div class="sezione" id="sez-calendario">
+    <div class="sez-head">
+      <h2>Calendario attività</h2>
+      <button class="btn btn-primary" id="btn-nuovo-ev">＋ Aggiungi evento</button>
+    </div>
+
+    <div style="background:#fff;border:1px solid var(--filo);border-radius:var(--radius);box-shadow:var(--ombra-1);padding:16px 18px;margin-bottom:1.2rem;">
+      <label class="check" style="border:none;background:none;padding:0;">
+        <input type="checkbox" id="cal-attivo">
+        <span>Mostra il calendario sul sito</span>
+      </label>
+      <p class="aiuto" style="margin-top:6px;">Spenta, la pagina Calendario sparisce dal menu e gli eventi restano qui, pronti per quando la riaccendi.</p>
+    </div>
+
+    <div class="filtri-st" id="filtri-cal"></div>
+    <div id="lista-eventi"></div>
   </div>
 
 </div>
@@ -520,6 +553,59 @@ textarea{resize:vertical;min-height:80px;line-height:1.6;}
   </div>
 </div>
 
+<!-- ══════════ MODALE EVENTO ══════════ -->
+<div class="overlay" id="modale-ev">
+  <div class="modale">
+    <div class="modale-head">
+      <div><h3 id="ev-tit">Nuovo evento</h3><p>Comparirà nel calendario del sito.</p></div>
+      <button class="chiudi" onclick="chiudiModale('modale-ev')">✕</button>
+    </div>
+    <div class="modale-body">
+      <div class="campo">
+        <label for="ev-titolo">Titolo *</label>
+        <input type="text" id="ev-titolo" placeholder="es. Uscita di apertura" maxlength="100">
+      </div>
+      <div class="riga due">
+        <div class="campo">
+          <label for="ev-branca">Per chi *</label>
+          <select id="ev-branca"></select>
+        </div>
+        <div class="campo">
+          <label for="ev-ora">Orario</label>
+          <input type="text" id="ev-ora" placeholder="es. 15:00 – 18:00" maxlength="20">
+        </div>
+      </div>
+      <div class="riga due">
+        <div class="campo">
+          <label for="ev-inizio">Data *</label>
+          <input type="date" id="ev-inizio">
+        </div>
+        <div class="campo">
+          <label for="ev-fine">Fino al (se dura più giorni)</label>
+          <input type="date" id="ev-fine">
+        </div>
+      </div>
+      <div class="campo">
+        <label for="ev-luogo">Luogo</label>
+        <input type="text" id="ev-luogo" placeholder="es. Sede, Via Maria Cristina 13" maxlength="120">
+      </div>
+      <div class="campo">
+        <label for="ev-note">Note</label>
+        <textarea id="ev-note" maxlength="600" style="min-height:70px;" placeholder="Cosa portare, come arrivare, quota…"></textarea>
+      </div>
+      <label class="check">
+        <input type="checkbox" id="ev-attivo" checked>
+        <span>Mostra questo evento sul sito</span>
+      </label>
+    </div>
+    <div class="modale-foot">
+      <button class="btn btn-danger" id="btn-elimina-ev" hidden>Elimina</button>
+      <button class="btn btn-outline" onclick="chiudiModale('modale-ev')">Annulla</button>
+      <button class="btn btn-verde" id="btn-salva-ev">Salva</button>
+    </div>
+  </div>
+</div>
+
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut }
@@ -542,6 +628,8 @@ const DATA = {
   richieste:  {},   // dati personali di minori — lettura protetta dalle regole
   messaggi:   {},   // messaggi dal modulo contatti
   destinatari:{},   // chi riceve le notifiche — ramo protetto
+  calendario: {},
+  impostazioni:{},
   pronto:     false
 };
 
@@ -551,6 +639,8 @@ let richInModifica   = null;
 let filtroStato      = '';
 let msgInModifica    = null;
 let destInModifica   = null;
+let evInModifica     = null;
+let filtroBrancaCal  = '';
 let fotoInAttesa     = undefined;   // undefined = invariata, null = da togliere, stringa = nuova
 
 const app  = initializeApp(FIREBASE_CONFIG);
@@ -630,6 +720,8 @@ function avviaAscolto() {
     DATA.capi       = v.capi       || {};
     DATA.iscrizioni = { ...FALLBACK.iscrizioni, ...(v.iscrizioni || {}) };
     DATA.avvisi     = v.avvisi     || {};
+    DATA.calendario = v.calendario || {};
+    DATA.impostazioni = v.impostazioni || {};
     DATA.pronto     = true;
     render();
     segnalaStato('ok');
@@ -688,6 +780,7 @@ function render() {
   renderRichieste();
   renderMessaggi();
   renderDestinatari();
+  renderCalendario();
 }
 
 function renderCapi() {
@@ -1244,6 +1337,51 @@ document.querySelectorAll('.chip[data-f]').forEach(c => {
   });
 });
 
+
+/* Esportazione in Excel vero, non CSV rinominato: le colonne hanno
+   larghezze sensate e le date restano date invece di diventare testo. */
+document.getElementById('btn-xlsx-rich').addEventListener('click', () => {
+  const lista = elencoRichieste();
+  if (!lista.length) return alert('Non ci sono richieste da esportare.');
+  if (!confirm('Il file conterrà dati personali di minori.\n\nSalvalo in un luogo sicuro ed eliminalo quando non serve più. Procedere?')) return;
+
+  if (typeof XLSX === 'undefined') {
+    alert('La libreria per Excel non si è caricata.\n\nControlla la connessione, oppure usa l\'esportazione CSV.');
+    return;
+  }
+
+  const righe = lista.map(r => ({
+    'Nome':          r.nomeRagazzo,
+    'Cognome':       r.cognomeRagazzo,
+    'Data nascita':  r.dataNascita ? new Date(r.dataNascita) : '',
+    'Età':           eta(r.dataNascita),
+    'Branca':        brancaPerEta(eta(r.dataNascita)),
+    'Genitore':      r.nomeGenitore,
+    'Email':         r.email,
+    'Telefono':      r.telefono || '',
+    'Note famiglia': r.note || '',
+    'Stato':         ETICHETTE_STATO[r.stato] || r.stato,
+    'Nota interna':  r.notaInterna || '',
+    'Ricevuta il':   r.ricevutaIl ? new Date(r.ricevutaIl) : ''
+  }));
+
+  const foglio = XLSX.utils.json_to_sheet(righe, { cellDates: true });
+
+  // Senza larghezze esplicite ogni colonna esce di 8 caratteri
+  // e il file va sistemato a mano ogni volta.
+  foglio['!cols'] = [
+    { wch: 14 }, { wch: 16 }, { wch: 13 }, { wch: 5 }, { wch: 18 },
+    { wch: 22 }, { wch: 26 }, { wch: 14 }, { wch: 40 }, { wch: 12 },
+    { wch: 30 }, { wch: 18 }
+  ];
+  foglio['!autofilter'] = { ref: foglio['!ref'] };
+  foglio['!freeze'] = { xSplit: 0, ySplit: 1 };
+
+  const cartella = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(cartella, foglio, 'Pre-iscrizioni');
+  XLSX.writeFile(cartella, `preiscrizioni-${new Date().toISOString().slice(0,10)}.xlsx`);
+});
+
 document.getElementById('btn-csv-rich').addEventListener('click', () => {
   const lista = elencoRichieste();
   if (!lista.length) return alert('Non ci sono richieste da esportare.');
@@ -1556,6 +1694,172 @@ document.getElementById('btn-elimina-dest').addEventListener('click', async () =
 });
 
 document.getElementById('btn-nuovo-dest').addEventListener('click', () => apriDestinatario(null));
+
+
+/* ═══════════════════════════════════════════════════════
+   CALENDARIO ATTIVITÀ
+
+   Gli eventi stanno in /contenuti/calendario, lettura pubblica
+   come il resto dei contenuti. Un interruttore generale in
+   /contenuti/impostazioni decide se la pagina compare sul sito:
+   spegnerlo non cancella nulla, nasconde soltanto.
+   ═══════════════════════════════════════════════════════ */
+
+const DESTINATARI_EVENTO = [
+  { id: 'tutti',     nome: 'Tutto il gruppo' },
+  { id: 'branco',    nome: 'Branco Mirfak' },
+  { id: 'reparto',   nome: 'Reparto Everest' },
+  { id: 'noviziato', nome: 'Noviziato Silmaril' },
+  { id: 'clan',      nome: 'Clan Zebrù' },
+  { id: 'gruppo',    nome: 'Comunità Capi' }
+];
+
+(function preparaCalendario() {
+  const sel = document.getElementById('ev-branca');
+  DESTINATARI_EVENTO.forEach(b => {
+    const o = document.createElement('option');
+    o.value = b.id; o.textContent = b.nome;
+    sel.appendChild(o);
+  });
+
+  const f = document.getElementById('filtri-cal');
+  f.innerHTML = '<div class="chip on" data-fc="">Tutti</div>' +
+    DESTINATARI_EVENTO.map(b => `<div class="chip" data-fc="${b.id}">${b.nome}</div>`).join('');
+  f.querySelectorAll('[data-fc]').forEach(c => c.onclick = () => {
+    f.querySelectorAll('[data-fc]').forEach(x => x.classList.remove('on'));
+    c.classList.add('on');
+    filtroBrancaCal = c.dataset.fc;
+    renderCalendario();
+  });
+})();
+
+document.getElementById('cal-attivo').addEventListener('change', async e => {
+  segnalaStato('salvando');
+  try {
+    await update(ref(db, 'contenuti/impostazioni'), { calendarioAttivo: e.target.checked });
+  } catch (err) {
+    segnalaStato('errore');
+    e.target.checked = !e.target.checked;   // rimette la spunta com'era
+    alert('Non riesco a salvare: ' + err.message);
+  }
+});
+
+function renderCalendario() {
+  const spunta = document.getElementById('cal-attivo');
+  if (document.activeElement !== spunta) {
+    spunta.checked = DATA.impostazioni.calendarioAttivo === true;
+  }
+
+  const tutti = Object.entries(DATA.calendario)
+    .map(([id, e]) => ({ id, ...e }))
+    .sort((a, b) => (a.dataInizio || '').localeCompare(b.dataInizio || ''));
+
+  const lista = filtroBrancaCal ? tutti.filter(e => e.branca === filtroBrancaCal) : tutti;
+  const cont = document.getElementById('lista-eventi');
+
+  if (!lista.length) {
+    cont.innerHTML = `<div class="vuoto"><div class="ic">📅</div><p>${
+      tutti.length ? 'Nessun evento per questo filtro.' : 'Nessun evento in calendario.'}</p></div>`;
+    return;
+  }
+
+  const oggi = new Date().toISOString().slice(0, 10);
+
+  cont.innerHTML = lista.map(e => {
+    const passato = (e.dataFine || e.dataInizio) < oggi;
+    const nome = DESTINATARI_EVENTO.find(b => b.id === e.branca)?.nome || e.branca;
+    return `<div class="rich-riga ${passato ? '' : 'nuova'}" data-ev="${e.id}"
+                 style="${passato ? 'opacity:.55;' : ''}">
+      <div class="rich-info">
+        <div class="nome">${esc(e.titolo)}</div>
+        <div class="meta">${nome}${e.luogo ? ' · ' + esc(e.luogo) : ''}</div>
+      </div>
+      <div class="rich-dx">
+        <span class="st ${e.attivo ? 'st-accolta' : 'st-non-accolta'}">${e.attivo ? 'visibile' : 'nascosto'}</span>
+        <span class="rich-data">${periodoIt(e.dataInizio, e.dataFine)}</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  cont.querySelectorAll('[data-ev]').forEach(el =>
+    el.onclick = () => apriEvento(el.dataset.ev));
+}
+
+function apriEvento(id) {
+  evInModifica = id;
+  const e = id ? DATA.calendario[id] : null;
+
+  document.getElementById('ev-tit').textContent = id ? 'Modifica evento' : 'Nuovo evento';
+  document.getElementById('ev-titolo').value = e?.titolo || '';
+  document.getElementById('ev-branca').value = e?.branca || 'tutti';
+  document.getElementById('ev-inizio').value = e?.dataInizio || '';
+  document.getElementById('ev-fine').value   = e?.dataFine || '';
+  document.getElementById('ev-ora').value    = e?.ora || '';
+  document.getElementById('ev-luogo').value  = e?.luogo || '';
+  document.getElementById('ev-note').value   = e?.note || '';
+  document.getElementById('ev-attivo').checked = id ? !!e.attivo : true;
+  document.getElementById('btn-elimina-ev').hidden = !id;
+
+  apriModale('modale-ev');
+  setTimeout(() => document.getElementById('ev-titolo').focus(), 50);
+}
+
+document.getElementById('btn-nuovo-ev').addEventListener('click', () => apriEvento(null));
+
+document.getElementById('btn-salva-ev').addEventListener('click', async () => {
+  const titolo = document.getElementById('ev-titolo').value.trim();
+  const inizio = document.getElementById('ev-inizio').value;
+  const fine   = document.getElementById('ev-fine').value;
+
+  if (!titolo) return alert('Serve un titolo.');
+  if (!inizio) return alert('Serve almeno la data di inizio.');
+  if (fine && fine < inizio) return alert('La data di fine viene prima di quella di inizio.');
+
+  const dati = {
+    titolo,
+    branca:     document.getElementById('ev-branca').value,
+    dataInizio: inizio,
+    dataFine:   fine || '',
+    ora:        document.getElementById('ev-ora').value.trim(),
+    luogo:      document.getElementById('ev-luogo').value.trim(),
+    note:       document.getElementById('ev-note').value.trim(),
+    attivo:     document.getElementById('ev-attivo').checked
+  };
+
+  segnalaStato('salvando');
+  try {
+    if (evInModifica) await update(ref(db, `contenuti/calendario/${evInModifica}`), dati);
+    else              await push(ref(db, 'contenuti/calendario'), dati);
+    chiudiModale('modale-ev');
+  } catch (err) {
+    segnalaStato('errore');
+    alert('Salvataggio non riuscito: ' + err.message);
+  }
+});
+
+document.getElementById('btn-elimina-ev').addEventListener('click', async () => {
+  const e = DATA.calendario[evInModifica];
+  if (!confirm(`Eliminare "${e.titolo}"?\n\nSe vuoi solo toglierlo dal sito, conviene nasconderlo.`)) return;
+  segnalaStato('salvando');
+  try {
+    await remove(ref(db, `contenuti/calendario/${evInModifica}`));
+    chiudiModale('modale-ev');
+  } catch (err) {
+    segnalaStato('errore');
+    alert('Eliminazione non riuscita: ' + err.message);
+  }
+});
+
+/* "12 ott" per un giorno solo, "12 – 14 ott" per più giorni. */
+function periodoIt(inizio, fine) {
+  if (!inizio) return '—';
+  const f = iso => {
+    const d = new Date(iso);
+    return d.toLocaleDateString('it-IT', { day: 'numeric', month: 'short' });
+  };
+  if (!fine || fine === inizio) return f(inizio);
+  return `${new Date(inizio).getDate()} – ${f(fine)}`;
+}
 
 
 /* ═══════════════════════════════════════════════════════

@@ -64,7 +64,9 @@ export const FALLBACK = {
     testo:       'Compilando il modulo di pre-iscrizione il ragazzo o la ragazza verrà aggiunto alla lista degli interessati. Dopo la riunione informativa riceverete un\'e-mail di conferma.',
     notaEsito:   'Entro la fine di luglio vi comunicheremo se possiamo accogliere vostro figlio o vostra figlia nel gruppo.'
   },
-  avvisi: []
+  avvisi: [],
+  calendario: [],
+  impostazioni: { calendarioAttivo: false }
 };
 
 
@@ -126,9 +128,11 @@ export async function caricaContenuti() {
 
     return {
       capi,
-      iscrizioni: { ...FALLBACK.iscrizioni, ...(dati.iscrizioni || {}) },
-      avvisi:     normalizzaAvvisi(dati.avvisi),
-      online:     true
+      iscrizioni:   { ...FALLBACK.iscrizioni, ...(dati.iscrizioni || {}) },
+      avvisi:       normalizzaAvvisi(dati.avvisi),
+      calendario:   normalizzaEventi(dati.calendario),
+      impostazioni: dati.impostazioni || {},
+      online:       true
     };
 
   } catch (errore) {
@@ -154,6 +158,20 @@ function normalizzaCapi(oggetto) {
       if ((a.ordine ?? 99) !== (b.ordine ?? 99)) return (a.ordine ?? 99) - (b.ordine ?? 99);
       return (a.nome || '').localeCompare(b.nome || '');
     });
+}
+
+
+/* Solo gli eventi visibili, in ordine di data, e senza quelli
+   già passati: un calendario pieno di date vecchie sembra
+   abbandonato anche quando non lo è. */
+function normalizzaEventi(oggetto) {
+  if (!oggetto) return [];
+  const oggi = new Date().toISOString().slice(0, 10);
+
+  return Object.entries(oggetto)
+    .map(([id, e]) => ({ id, ...e }))
+    .filter(e => e.attivo && (e.dataFine || e.dataInizio) >= oggi)
+    .sort((a, b) => (a.dataInizio || '').localeCompare(b.dataInizio || ''));
 }
 
 
