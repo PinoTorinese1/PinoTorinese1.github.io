@@ -110,10 +110,39 @@
           }
         }
       },
+      "kpi": {
+        ".write": "auth != null",
+        "$voce": {
+          ".validate": "newData.hasChildren(['valore','etichetta'])",
+          "valore": {
+            ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 12"
+          },
+          "etichetta": {
+            ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 30"
+          },
+          "ordine": {
+            ".validate": "newData.isNumber() && newData.val() >= 0"
+          },
+          "$altro": {
+            ".validate": false
+          }
+        }
+      },
       "impostazioni": {
         ".write": "auth != null",
         "calendarioAttivo": {
           ".validate": "newData.isBoolean()"
+        },
+        "bannerAttivo": {
+          ".validate": "newData.isBoolean()"
+        },
+        "bannerTesto": {
+          ".validate": "newData.isString() && newData.val().length <= 400"
+        },
+        "gallerie": {
+          "$branca": {
+            ".validate": "newData.isBoolean()"
+          }
         },
         "$altro": {
           ".validate": false
@@ -128,6 +157,15 @@
       ".write": "auth != null",
       "$capo": {
         ".validate": "newData.isString() && newData.val().length <= 90000 && newData.val().beginsWith('data:image/')"
+      }
+    },
+    "gallerie": {
+      ".read": true,
+      ".write": "auth != null",
+      "$branca": {
+        "$foto": {
+          ".validate": "newData.isString() && newData.val().length <= 200000 && newData.val().beginsWith('data:image/')"
+        }
       }
     },
     "richieste": {
@@ -227,6 +265,28 @@
           },
           "argomenti": {
             ".validate": "newData.isString() && newData.val().length <= 200"
+          },
+          "$altro": {
+            ".validate": false
+          }
+        }
+      },
+      "link": {
+        ".read": "auth != null",
+        ".write": "auth != null",
+        "$link": {
+          ".validate": "newData.hasChildren(['nome','url'])",
+          "nome": {
+            ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 60"
+          },
+          "url": {
+            ".validate": "newData.isString() && newData.val().beginsWith('http') && newData.val().length <= 300"
+          },
+          "note": {
+            ".validate": "newData.isString() && newData.val().length <= 200"
+          },
+          "ordine": {
+            ".validate": "newData.isNumber() && newData.val() >= 0"
           },
           "$altro": {
             ".validate": false

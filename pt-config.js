@@ -66,7 +66,13 @@ export const FALLBACK = {
   },
   avvisi: [],
   calendario: [],
-  impostazioni: { calendarioAttivo: false }
+  kpi: [
+    { valore: '109',  etichetta: 'Iscritti' },
+    { valore: '17',   etichetta: 'Capi' },
+    { valore: '4',    etichetta: 'Branche' },
+    { valore: '1972', etichetta: 'Anno di fondazione' }
+  ],
+  impostazioni: { calendarioAttivo: false, bannerAttivo: false }
 };
 
 
@@ -131,6 +137,7 @@ export async function caricaContenuti() {
       iscrizioni:   { ...FALLBACK.iscrizioni, ...(dati.iscrizioni || {}) },
       avvisi:       normalizzaAvvisi(dati.avvisi),
       calendario:   normalizzaEventi(dati.calendario),
+      kpi:          normalizzaKpi(dati.kpi),
       impostazioni: dati.impostazioni || {},
       online:       true
     };
@@ -161,6 +168,17 @@ function normalizzaCapi(oggetto) {
 }
 
 
+/* Numeri in evidenza sulla home. Se non ce ne sono, si usano
+   quelli di riserva: una home senza numeri sembra incompleta. */
+function normalizzaKpi(oggetto) {
+  if (!oggetto) return structuredClone(FALLBACK.kpi);
+  const lista = Object.entries(oggetto)
+    .map(([id, k]) => ({ id, ...k }))
+    .sort((a, b) => (a.ordine ?? 99) - (b.ordine ?? 99));
+  return lista.length ? lista : structuredClone(FALLBACK.kpi);
+}
+
+
 /* Solo gli eventi visibili, in ordine di data, e senza quelli
    già passati: un calendario pieno di date vecchie sembra
    abbandonato anche quando non lo è. */
@@ -183,6 +201,41 @@ function normalizzaAvvisi(oggetto) {
     .map(([id, avviso]) => ({ id, ...avviso }))
     .filter(a => a.attivo)
     .sort((a, b) => (a.ordine ?? 99) - (b.ordine ?? 99));
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   GALLERIE FOTOGRAFICHE
+
+   Chiamata a parte, su richiesta: una galleria pesa più di tutto
+   il resto del sito insieme, e non ha senso scaricarla a chi apre
+   la home. Il risultato viene tenuto in memoria per non
+   richiederlo due volte nella stessa visita.
+   ═══════════════════════════════════════════════════════════ */
+
+const galleriaInMemoria = {};
+
+export async function caricaGalleria(branca) {
+  if (galleriaInMemoria[branca]) return galleriaInMemoria[branca];
+
+  try {
+    const stop = new AbortController();
+    const timer = setTimeout(() => stop.abort(), 8000);
+
+    const r = await fetch(`${FIREBASE_CONFIG.databaseURL}/gallerie/${branca}.json`,
+                          { signal: stop.signal });
+    clearTimeout(timer);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+
+    const dati = (await r.json()) || {};
+    const foto = Object.values(dati).filter(v => typeof v === 'string' && v.startsWith('data:image/'));
+    galleriaInMemoria[branca] = foto;
+    return foto;
+
+  } catch (e) {
+    console.warn(`[PT] galleria ${branca} non caricata:`, e.message);
+    return [];
+  }
 }
 
 

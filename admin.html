@@ -184,6 +184,23 @@ textarea{resize:vertical;min-height:80px;line-height:1.6;}
 .dett .et{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:2px;}
 .dett .vl{font-size:.9rem;}
 .dett .vl a{color:var(--verde);}
+.pannello{background:#fff;border:1px solid var(--filo);border-radius:var(--radius);box-shadow:var(--ombra-1);padding:20px 22px;margin-bottom:1.2rem;}
+.pannello-tit{font-family:var(--titolo-font);font-size:1rem;font-weight:620;letter-spacing:-0.015em;color:var(--verde);margin-bottom:10px;}
+.riga-mini{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--filo);}
+.riga-mini:last-of-type{border-bottom:none;}
+.riga-mini .corpo{flex:1;min-width:0;}
+.riga-mini .t{font-weight:560;font-size:.9rem;}
+.riga-mini .s{font-size:.78rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.kpi-num{font-family:var(--titolo-font);font-size:1.3rem;font-weight:700;color:var(--fuoco);min-width:52px;letter-spacing:-0.02em;}
+.gal-branca{background:#fff;border:1px solid var(--filo);border-radius:var(--radius);box-shadow:var(--ombra-1);padding:18px 20px;margin-bottom:12px;}
+.gal-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap;}
+.gal-head .nome{font-family:var(--titolo-font);font-weight:620;font-size:1rem;color:var(--verde);margin-right:auto;letter-spacing:-0.015em;}
+.gal-griglia{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px;}
+.gal-foto{position:relative;aspect-ratio:1;border-radius:9px;overflow:hidden;background:var(--avorio-s);}
+.gal-foto img{width:100%;height:100%;object-fit:cover;display:block;}
+.gal-togli{position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;border:none;cursor:pointer;font-size:.72rem;line-height:1;display:flex;align-items:center;justify-content:center;}
+.gal-togli:hover{background:var(--rosso);}
+.gal-vuota{font-size:.84rem;color:var(--muted);padding:14px 0;}
 .privacy-nota{background:#fff8e1;border:1px solid #ffe082;border-radius:var(--radius);padding:12px 14px;font-size:.8rem;color:#5d4037;margin-bottom:1rem;display:flex;gap:10px;align-items:flex-start;line-height:1.55;}
 .filtri-st{display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap;}
 .chip{padding:6px 14px;border-radius:var(--r-pillola);font-size:.75rem;font-weight:500;cursor:pointer;border:1px solid var(--border);background:#fff;color:var(--muted);}
@@ -263,7 +280,9 @@ textarea{resize:vertical;min-height:80px;line-height:1.6;}
     <button class="tab" data-sez="richieste">Richieste<span class="badge-tab" id="badge-rich" hidden>0</span></button>
     <button class="tab" data-sez="messaggi">Messaggi<span class="badge-tab" id="badge-msg" hidden>0</span></button>
     <button class="tab" data-sez="calendario">Calendario</button>
+    <button class="tab" data-sez="gallerie">Gallerie</button>
     <button class="tab" data-sez="destinatari">Destinatari</button>
+    <button class="tab" data-sez="impostazioni">Impostazioni</button>
   </div>
 
   <!-- ─── CAPI ─── -->
@@ -391,6 +410,46 @@ textarea{resize:vertical;min-height:80px;line-height:1.6;}
 
     <div class="filtri-st" id="filtri-cal"></div>
     <div id="lista-eventi"></div>
+  </div>
+
+  <!-- ─── GALLERIE ─── -->
+  <div class="sezione" id="sez-gallerie">
+    <div class="sez-head"><h2>Gallerie fotografiche</h2></div>
+    <p class="aiuto" style="margin-bottom:1rem;">Ogni branca ha la sua galleria sulla propria pagina. Le foto vengono rimpicciolite qui nel browser prima del salvataggio. Massimo 12 per branca.</p>
+    <div id="lista-gallerie"></div>
+  </div>
+
+  <!-- ─── IMPOSTAZIONI ─── -->
+  <div class="sezione" id="sez-impostazioni">
+    <div class="sez-head"><h2>Impostazioni del sito</h2></div>
+
+    <div class="pannello">
+      <h3 class="pannello-tit">Fascia di avviso</h3>
+      <label class="check" style="margin-bottom:12px;">
+        <input type="checkbox" id="imp-banner">
+        <span>Mostra la fascia gialla in cima al sito</span>
+      </label>
+      <div class="campo">
+        <label for="imp-banner-testo">Testo della fascia</label>
+        <textarea id="imp-banner-testo" maxlength="400" style="min-height:70px;"></textarea>
+        <span class="aiuto">Lascia vuoto per usare il testo predefinito sulla ristrutturazione.</span>
+      </div>
+      <button class="btn btn-verde btn-sm" id="btn-salva-banner">Salva fascia</button>
+    </div>
+
+    <div class="pannello">
+      <h3 class="pannello-tit">Numeri in evidenza sulla home</h3>
+      <p class="aiuto" style="margin-bottom:12px;">Fino a 5 voci. Aggiornali quando cambiano gli iscritti o i capi.</p>
+      <div id="lista-kpi"></div>
+      <button class="btn btn-primary btn-sm" id="btn-nuovo-kpi" style="margin-top:10px;">＋ Aggiungi numero</button>
+    </div>
+
+    <div class="pannello">
+      <h3 class="pannello-tit">App e siti utili</h3>
+      <p class="aiuto" style="margin-bottom:12px;">Solo per i capi: questi collegamenti non compaiono sul sito pubblico.</p>
+      <div id="lista-link"></div>
+      <button class="btn btn-primary btn-sm" id="btn-nuovo-link" style="margin-top:10px;">＋ Aggiungi collegamento</button>
+    </div>
   </div>
 
 </div>
@@ -630,6 +689,9 @@ const DATA = {
   destinatari:{},   // chi riceve le notifiche — ramo protetto
   calendario: {},
   impostazioni:{},
+  kpi:        {},
+  gallerie:   {},
+  link:       {},
   pronto:     false
 };
 
@@ -641,6 +703,8 @@ let msgInModifica    = null;
 let destInModifica   = null;
 let evInModifica     = null;
 let filtroBrancaCal  = '';
+let kpiInModifica    = null;
+let linkInModifica   = null;
 let fotoInAttesa     = undefined;   // undefined = invariata, null = da togliere, stringa = nuova
 
 const app  = initializeApp(FIREBASE_CONFIG);
@@ -722,6 +786,7 @@ function avviaAscolto() {
     DATA.avvisi     = v.avvisi     || {};
     DATA.calendario = v.calendario || {};
     DATA.impostazioni = v.impostazioni || {};
+    DATA.kpi          = v.kpi || {};
     DATA.pronto     = true;
     render();
     segnalaStato('ok');
@@ -744,6 +809,16 @@ function avviaAscolto() {
   }, errore => {
     console.error('[PT] lettura richieste fallita:', errore);
   });
+
+  onValue(ref(db, 'gallerie'), snap => {
+    DATA.gallerie = snap.val() || {};
+    renderGallerie();
+  }, e => console.error('[PT] lettura gallerie fallita:', e));
+
+  onValue(ref(db, 'config/link'), snap => {
+    DATA.link = snap.val() || {};
+    renderLink();
+  }, e => console.error('[PT] lettura link fallita:', e));
 
   onValue(ref(db, 'config/destinatari'), snap => {
     DATA.destinatari = snap.val() || {};
@@ -781,6 +856,10 @@ function render() {
   renderMessaggi();
   renderDestinatari();
   renderCalendario();
+  renderImpostazioni();
+  renderKpi();
+  renderGallerie();
+  renderLink();
 }
 
 function renderCapi() {
@@ -944,7 +1023,7 @@ document.getElementById('capo-file').addEventListener('change', async e => {
   peso.textContent = 'Elaborazione…';
 
   try {
-    const dataUri = await comprimi(file);
+    const dataUri = await comprimiFoto(file, LATO_MAX, QUALITA);
 
     if (dataUri.length > PESO_MAX) {
       peso.textContent = '';
@@ -961,37 +1040,6 @@ document.getElementById('capo-file').addEventListener('change', async e => {
     alert('Non sono riuscito a leggere questa immagine: ' + err.message);
   }
 });
-
-/* Disegna l'immagine su un canvas ridotto e la riesporta in JPEG.
-   Restituisce una stringa data:image/jpeg;base64,… */
-function comprimi(file) {
-  return new Promise((risolvi, rifiuta) => {
-    const lettore = new FileReader();
-    lettore.onerror = () => rifiuta(new Error('lettura fallita'));
-    lettore.onload = () => {
-      const img = new Image();
-      img.onerror = () => rifiuta(new Error('formato non supportato dal browser'));
-      img.onload = () => {
-        let { width: w, height: h } = img;
-        if (w > LATO_MAX || h > LATO_MAX) {
-          if (w >= h) { h = Math.round(h * LATO_MAX / w); w = LATO_MAX; }
-          else        { w = Math.round(w * LATO_MAX / h); h = LATO_MAX; }
-        }
-        const c = document.createElement('canvas');
-        c.width = w; c.height = h;
-        const ctx = c.getContext('2d');
-        ctx.imageSmoothingQuality = 'high';
-        // Sfondo bianco: i PNG trasparenti in JPEG diventerebbero neri.
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, w, h);
-        ctx.drawImage(img, 0, 0, w, h);
-        risolvi(c.toDataURL('image/jpeg', QUALITA));
-      };
-      img.src = lettore.result;
-    };
-    lettore.readAsDataURL(file);
-  });
-}
 
 function mostraAnteprima(sorgente) {
   const nome = document.getElementById('capo-nome').value.trim();
@@ -1859,6 +1907,274 @@ function periodoIt(inizio, fine) {
   };
   if (!fine || fine === inizio) return f(inizio);
   return `${new Date(inizio).getDate()} – ${f(fine)}`;
+}
+
+
+/* ═══════════════════════════════════════════════════════
+   IMPOSTAZIONI, NUMERI IN EVIDENZA, GALLERIE, COLLEGAMENTI
+   ═══════════════════════════════════════════════════════ */
+
+const MAX_KPI       = 5;
+const MAX_FOTO_GAL  = 12;
+const LATO_GAL      = 900;    // le foto di galleria si vedono più grandi
+const QUALITA_GAL   = 0.68;
+const PESO_GAL      = 190000;
+
+const BRANCHE_GAL = [
+  { id: 'branco',    nome: 'Branco Mirfak' },
+  { id: 'reparto',   nome: 'Reparto Everest' },
+  { id: 'noviziato', nome: 'Noviziato Silmaril' },
+  { id: 'clan',      nome: 'Clan Zebrù' }
+];
+
+
+/* ─── Fascia di avviso ─── */
+function renderImpostazioni() {
+  const s = document.getElementById('imp-banner');
+  if (document.activeElement !== s) s.checked = DATA.impostazioni.bannerAttivo === true;
+  const t = document.getElementById('imp-banner-testo');
+  if (document.activeElement !== t) t.value = DATA.impostazioni.bannerTesto || '';
+}
+
+document.getElementById('btn-salva-banner').addEventListener('click', async () => {
+  const btn = document.getElementById('btn-salva-banner');
+  btn.disabled = true;
+  segnalaStato('salvando');
+  try {
+    await update(ref(db, 'contenuti/impostazioni'), {
+      bannerAttivo: document.getElementById('imp-banner').checked,
+      bannerTesto:  document.getElementById('imp-banner-testo').value.trim()
+    });
+    btn.textContent = '✓ Salvato';
+    setTimeout(() => { btn.textContent = 'Salva fascia'; }, 1800);
+  } catch (e) {
+    segnalaStato('errore');
+    alert('Salvataggio non riuscito: ' + e.message);
+  } finally { btn.disabled = false; }
+});
+
+
+/* ─── Numeri in evidenza ─── */
+function renderKpi() {
+  const lista = Object.entries(DATA.kpi).map(([id, k]) => ({ id, ...k }))
+    .sort((a, b) => (a.ordine ?? 99) - (b.ordine ?? 99));
+
+  const cont = document.getElementById('lista-kpi');
+  document.getElementById('btn-nuovo-kpi').disabled = lista.length >= MAX_KPI;
+
+  cont.innerHTML = lista.length ? lista.map(k => `
+    <div class="riga-mini">
+      <span class="kpi-num">${esc(k.valore)}</span>
+      <div class="corpo"><div class="t">${esc(k.etichetta)}</div></div>
+      <button class="icona" data-kpi="${k.id}" title="Modifica">✏️</button>
+      <button class="icona" data-kpix="${k.id}" title="Elimina">🗑</button>
+    </div>`).join('')
+    : '<div class="gal-vuota">Nessun numero impostato: la home mostrerà quelli scritti nel codice.</div>';
+
+  cont.querySelectorAll('[data-kpi]').forEach(b => b.onclick = () => modificaKpi(b.dataset.kpi));
+  cont.querySelectorAll('[data-kpix]').forEach(b => b.onclick = () => eliminaKpi(b.dataset.kpix));
+}
+
+async function modificaKpi(id) {
+  const k = id ? DATA.kpi[id] : null;
+  const valore = prompt('Numero da mostrare (es. 109, 1972):', k?.valore || '');
+  if (valore === null) return;
+  if (!valore.trim()) return alert('Il numero non può essere vuoto.');
+
+  const etichetta = prompt('Etichetta sotto il numero (es. Iscritti):', k?.etichetta || '');
+  if (etichetta === null) return;
+  if (!etichetta.trim()) return alert('L\'etichetta non può essere vuota.');
+
+  const dati = {
+    valore: valore.trim().slice(0, 12),
+    etichetta: etichetta.trim().slice(0, 30),
+    ordine: k?.ordine ?? Object.keys(DATA.kpi).length + 1
+  };
+
+  segnalaStato('salvando');
+  try {
+    if (id) await update(ref(db, `contenuti/kpi/${id}`), dati);
+    else    await push(ref(db, 'contenuti/kpi'), dati);
+  } catch (e) { segnalaStato('errore'); alert('Salvataggio non riuscito: ' + e.message); }
+}
+
+async function eliminaKpi(id) {
+  if (!confirm(`Togliere "${DATA.kpi[id].etichetta}" dalla home?`)) return;
+  try { await remove(ref(db, `contenuti/kpi/${id}`)); }
+  catch (e) { alert('Eliminazione non riuscita: ' + e.message); }
+}
+
+document.getElementById('btn-nuovo-kpi').addEventListener('click', () => modificaKpi(null));
+
+
+/* ─── Gallerie ─── */
+function renderGallerie() {
+  const cont = document.getElementById('lista-gallerie');
+  const attive = DATA.impostazioni.gallerie || {};
+
+  cont.innerHTML = BRANCHE_GAL.map(b => {
+    const foto = DATA.gallerie[b.id] || {};
+    const chiavi = Object.keys(foto);
+
+    return `<div class="gal-branca">
+      <div class="gal-head">
+        <span class="nome">${esc(b.nome)}</span>
+        <span class="aiuto">${chiavi.length}/${MAX_FOTO_GAL}</span>
+        <label class="check" style="border:none;background:none;padding:0;">
+          <input type="checkbox" data-galsw="${b.id}" ${attive[b.id] ? 'checked' : ''}>
+          <span style="font-size:.82rem;">Mostra sul sito</span>
+        </label>
+        <button class="btn btn-outline btn-sm" data-galadd="${b.id}"
+                ${chiavi.length >= MAX_FOTO_GAL ? 'disabled' : ''}>＋ Foto</button>
+        <input type="file" data-galfile="${b.id}" class="file-nascosto" accept="image/*" multiple>
+      </div>
+      ${chiavi.length ? `<div class="gal-griglia">${chiavi.map(k => `
+        <div class="gal-foto">
+          <img src="${esc(foto[k])}" alt="" loading="lazy">
+          <button class="gal-togli" data-galdel="${b.id}|${k}" title="Togli">✕</button>
+        </div>`).join('')}</div>`
+        : '<div class="gal-vuota">Nessuna foto. La galleria non comparirà sulla pagina.</div>'}
+    </div>`;
+  }).join('');
+
+  cont.querySelectorAll('[data-galsw]').forEach(c => c.onchange = async e => {
+    try {
+      await update(ref(db, 'contenuti/impostazioni/gallerie'), { [c.dataset.galsw]: e.target.checked });
+    } catch (err) {
+      e.target.checked = !e.target.checked;
+      alert('Non riesco a salvare: ' + err.message);
+    }
+  });
+
+  cont.querySelectorAll('[data-galadd]').forEach(b => b.onclick = () =>
+    cont.querySelector(`[data-galfile="${b.dataset.galadd}"]`).click());
+
+  cont.querySelectorAll('[data-galfile]').forEach(inp => inp.onchange = e =>
+    caricaFotoGalleria(inp.dataset.galfile, e.target.files));
+
+  cont.querySelectorAll('[data-galdel]').forEach(b => b.onclick = async () => {
+    const [branca, chiave] = b.dataset.galdel.split('|');
+    if (!confirm('Togliere questa foto dalla galleria?')) return;
+    try { await remove(ref(db, `gallerie/${branca}/${chiave}`)); }
+    catch (e) { alert('Eliminazione non riuscita: ' + e.message); }
+  });
+}
+
+async function caricaFotoGalleria(branca, files) {
+  if (!files?.length) return;
+
+  const esistenti = Object.keys(DATA.gallerie[branca] || {}).length;
+  const spazio = MAX_FOTO_GAL - esistenti;
+  if (spazio <= 0) return alert(`Questa galleria ha già ${MAX_FOTO_GAL} foto.`);
+
+  const daCaricare = Array.from(files).slice(0, spazio);
+  if (files.length > spazio) {
+    alert(`C'è spazio per ${spazio} foto: carico le prime ${spazio}.`);
+  }
+
+  segnalaStato('salvando');
+  let fatte = 0, saltate = 0;
+
+  for (const file of daCaricare) {
+    if (!file.type.startsWith('image/')) { saltate++; continue; }
+    try {
+      const uri = await comprimiFoto(file, LATO_GAL, QUALITA_GAL);
+      if (uri.length > PESO_GAL) { saltate++; continue; }
+      await push(ref(db, `gallerie/${branca}`), uri);
+      fatte++;
+    } catch { saltate++; }
+  }
+
+  segnalaStato('ok');
+  if (saltate) alert(`Caricate ${fatte} foto. ${saltate} scartate perché troppo grandi o in un formato non leggibile.`);
+}
+
+
+/* ─── Collegamenti utili ─── */
+function renderLink() {
+  const lista = Object.entries(DATA.link).map(([id, l]) => ({ id, ...l }))
+    .sort((a, b) => (a.ordine ?? 99) - (b.ordine ?? 99));
+
+  const cont = document.getElementById('lista-link');
+  cont.innerHTML = lista.length ? lista.map(l => `
+    <div class="riga-mini">
+      <div class="corpo">
+        <div class="t"><a href="${esc(l.url)}" target="_blank" rel="noopener" style="color:var(--verde);">${esc(l.nome)} ↗</a></div>
+        <div class="s">${esc(l.note || l.url)}</div>
+      </div>
+      <button class="icona" data-lnk="${l.id}" title="Modifica">✏️</button>
+      <button class="icona" data-lnkx="${l.id}" title="Elimina">🗑</button>
+    </div>`).join('')
+    : '<div class="gal-vuota">Nessun collegamento.</div>';
+
+  cont.querySelectorAll('[data-lnk]').forEach(b => b.onclick = () => modificaLink(b.dataset.lnk));
+  cont.querySelectorAll('[data-lnkx]').forEach(b => b.onclick = async () => {
+    const id = b.dataset.lnkx;
+    if (!confirm(`Togliere "${DATA.link[id].nome}"?`)) return;
+    try { await remove(ref(db, `config/link/${id}`)); }
+    catch (e) { alert('Eliminazione non riuscita: ' + e.message); }
+  });
+}
+
+async function modificaLink(id) {
+  const l = id ? DATA.link[id] : null;
+
+  const nome = prompt('Nome del collegamento:', l?.nome || '');
+  if (nome === null) return;
+  if (!nome.trim()) return alert('Serve un nome.');
+
+  const url = prompt('Indirizzo (deve iniziare con https://):', l?.url || 'https://');
+  if (url === null) return;
+  if (!url.startsWith('http')) return alert('L\'indirizzo deve iniziare con http:// o https://');
+
+  const note = prompt('Nota (a cosa serve):', l?.note || '');
+  if (note === null) return;
+
+  const dati = {
+    nome: nome.trim().slice(0, 60),
+    url:  url.trim().slice(0, 300),
+    note: (note || '').trim().slice(0, 200),
+    ordine: l?.ordine ?? Object.keys(DATA.link).length + 1
+  };
+
+  segnalaStato('salvando');
+  try {
+    if (id) await update(ref(db, `config/link/${id}`), dati);
+    else    await push(ref(db, 'config/link'), dati);
+  } catch (e) { segnalaStato('errore'); alert('Salvataggio non riuscito: ' + e.message); }
+}
+
+document.getElementById('btn-nuovo-link').addEventListener('click', () => modificaLink(null));
+
+
+/* Compressione condivisa: la usano sia le foto dei capi che le gallerie,
+   con lato e qualità diversi. */
+function comprimiFoto(file, lato, qualita) {
+  return new Promise((risolvi, rifiuta) => {
+    const lettore = new FileReader();
+    lettore.onerror = () => rifiuta(new Error('lettura fallita'));
+    lettore.onload = () => {
+      const img = new Image();
+      img.onerror = () => rifiuta(new Error('formato non supportato'));
+      img.onload = () => {
+        let { width: w, height: h } = img;
+        if (w > lato || h > lato) {
+          if (w >= h) { h = Math.round(h * lato / w); w = lato; }
+          else        { w = Math.round(w * lato / h); h = lato; }
+        }
+        const c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        const ctx = c.getContext('2d');
+        ctx.imageSmoothingQuality = 'high';
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, w, h);
+        ctx.drawImage(img, 0, 0, w, h);
+        risolvi(c.toDataURL('image/jpeg', qualita));
+      };
+      img.src = lettore.result;
+    };
+    lettore.readAsDataURL(file);
+  });
 }
 
 

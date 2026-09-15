@@ -54,6 +54,7 @@
     "url": "https://www.agesci.it"
   },
   "sameAs": [
+    "https://www.instagram.com/scoutpinotorinese/",
     "https://www.instagram.com/clanzebru/",
     "https://www.facebook.com/Gruppo-Scout-Pino-Torinese-1-150108985095296/"
   ]
@@ -462,6 +463,16 @@ h1, h2, h3, .section-label { scroll-margin-top: 88px; }
 .iscrizioni-banner.chiuse { background:var(--testo-muted); }
 .iscrizioni-banner .closed-badge { display:inline-block; background:rgba(255,255,255,0.2); color:#fff; font-size:0.7rem; letter-spacing:0.12em; text-transform:uppercase; font-weight:700; padding:5px 14px; border-radius:2px; margin-bottom:16px; }
 
+/* ── GALLERIA ── */
+.galleria { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:8px; }
+.gal-cella { aspect-ratio:1; border-radius:var(--r-medio); overflow:hidden; background:var(--avorio-scuro); cursor:zoom-in; box-shadow:var(--ombra-1); transition:transform .25s cubic-bezier(.2,.9,.3,1); }
+.gal-cella:hover { transform:scale(1.03); }
+.gal-cella img { width:100%; height:100%; object-fit:cover; display:block; }
+.lente { position:fixed; inset:0; background:rgba(12,20,15,.92); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); z-index:600; display:none; align-items:center; justify-content:center; padding:1.5rem; cursor:zoom-out; }
+.lente.aperta { display:flex; }
+.lente img { max-width:100%; max-height:100%; border-radius:var(--r-medio); box-shadow:0 20px 60px rgba(0,0,0,.5); }
+.lente-chiudi { position:absolute; top:1rem; right:1.25rem; background:rgba(255,255,255,.14); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,.2); color:#fff; width:40px; height:40px; border-radius:50%; font-size:1.1rem; cursor:pointer; }
+
 /* ── CALENDARIO ── */
 .mese { margin-bottom: 2rem; }
 .mese-nome { font-family: var(--titolo-font); font-size: 1.15rem; font-weight: 640; letter-spacing: -0.02em; color: var(--verde); text-transform: capitalize; margin-bottom: 0.9rem; padding-bottom: 8px; border-bottom: 1px solid var(--filo); }
@@ -587,9 +598,9 @@ h1, h2, h3, .section-label { scroll-margin-top: 88px; }
 <body>
 
 <!-- Fascia temporanea: rimuovere quando il sito è a regime -->
-<div class="fascia-lavori" id="fascia-lavori">
+<div class="fascia-lavori" id="fascia-lavori" hidden>
   <span aria-hidden="true">🚧</span>
-  <div class="testo"><strong>Sito in ristrutturazione.</strong> Stiamo rifacendo le pagine: alcune informazioni potrebbero essere incomplete o non aggiornate. Per qualsiasi cosa scrivi a <a href="mailto:pinotorinese1@piemonte.agesci.it" style="color:#e65100;">pinotorinese1@piemonte.agesci.it</a></div>
+  <div class="testo" id="fascia-testo"></div>
   <button onclick="chiudiFascia()" title="Nascondi" aria-label="Nascondi avviso">✕</button>
 </div>
 
@@ -641,12 +652,7 @@ h1, h2, h3, .section-label { scroll-margin-top: 88px; }
     <div class="hero-eyebrow">Dal 1972 · Pino Torinese · AGESCI</div>
     <h1>Gruppo Scout<br>Pino Torinese 1</h1>
     <p>Avventura, crescita e servizio nel cuore delle colline torinesi. Bambini, ragazzi e giovani che imparano a guardare il mondo con occhi aperti.</p>
-    <div class="hero-stats">
-      <div class="stat-box"><div class="stat-num">109</div><div class="stat-label">Iscritti</div></div>
-      <div class="stat-box"><div class="stat-num">17</div><div class="stat-label">Capi</div></div>
-      <div class="stat-box"><div class="stat-num">3</div><div class="stat-label">Branche</div></div>
-      <div class="stat-box"><div class="stat-num">1972</div><div class="stat-label">Anno di fondazione</div></div>
-    </div>
+    <div class="hero-stats" id="hero-kpi"></div>
     <div class="hero-cta">
       <button class="btn-primary" onclick="showPage('iscrizioni')">Iscriviti al gruppo</button>
       <button class="btn-secondary" onclick="showPage('gruppo')">Scopri il gruppo</button>
@@ -843,6 +849,7 @@ h1, h2, h3, .section-label { scroll-margin-top: 88px; }
       </div>
 
       <div id="capi-branco"></div>
+      <div id="galleria-branco"></div>
     </div>
   </div>
 </div>
@@ -873,6 +880,7 @@ h1, h2, h3, .section-label { scroll-margin-top: 88px; }
       </div>
 
       <div id="capi-reparto"></div>
+      <div id="galleria-reparto"></div>
       <div class="info-box" style="margin-top:1rem;">
         <h4>📸 Gallery foto</h4>
         <p>Guarda le foto delle attività, delle uscite e dei campi del Reparto Everest.</p>
@@ -908,6 +916,7 @@ h1, h2, h3, .section-label { scroll-margin-top: 88px; }
       </div>
 
       <div id="capi-clan"></div>
+      <div id="galleria-clan"></div>
       <div class="info-box" style="margin-top:1rem;">
         <h4>📸 Gallery Clan</h4>
         <p>Guarda le foto delle attività e dei campi del Clan Zebrù.</p>
@@ -943,6 +952,7 @@ h1, h2, h3, .section-label { scroll-margin-top: 88px; }
       </div>
 
       <div id="capi-noviziato"></div>
+      <div id="galleria-noviziato"></div>
 
       <div class="info-grid" style="margin-top:2rem;">
         <div class="info-box">
@@ -1017,9 +1027,13 @@ h1, h2, h3, .section-label { scroll-margin-top: 88px; }
         <div class="contact-item">
           <div class="label">Social</div>
           <div class="value social-riga">
+            <a href="https://www.instagram.com/scoutpinotorinese/" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.3-1.46.72-2.13 1.38C1.35 2.68.93 3.35.63 4.14.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.3.79.72 1.46 1.38 2.13.67.66 1.34 1.08 2.13 1.38.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56.79-.3 1.46-.72 2.13-1.38.66-.67 1.08-1.34 1.38-2.13.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91-.3-.79-.72-1.46-1.38-2.13C21.32 1.35 20.65.93 19.86.63c-.76-.3-1.64-.5-2.91-.56C15.67.01 15.26 0 12 0z"/><path d="M12 5.84a6.16 6.16 0 1 0 0 12.32 6.16 6.16 0 0 0 0-12.32zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/><circle cx="18.41" cy="5.59" r="1.44"/></svg>
+              <span>@scoutpinotorinese <small style="opacity:.6">— gruppo</small></span>
+            </a>
             <a href="https://www.instagram.com/clanzebru/" target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.3-1.46.72-2.13 1.38C1.35 2.68.93 3.35.63 4.14.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.3.79.72 1.46 1.38 2.13.67.66 1.34 1.08 2.13 1.38.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56.79-.3 1.46-.72 2.13-1.38.66-.67 1.08-1.34 1.38-2.13.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91-.3-.79-.72-1.46-1.38-2.13C21.32 1.35 20.65.93 19.86.63c-.76-.3-1.64-.5-2.91-.56C15.67.01 15.26 0 12 0z"/><path d="M12 5.84a6.16 6.16 0 1 0 0 12.32 6.16 6.16 0 0 0 0-12.32zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/><circle cx="18.41" cy="5.59" r="1.44"/></svg>
-              <span>@clanzebru</span>
+              <span>@clanzebru <small style="opacity:.6">— Clan</small></span>
             </a>
             <a href="https://www.facebook.com/Gruppo-Scout-Pino-Torinese-1-150108985095296/" target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.09 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.09 24 18.1 24 12.07z"/></svg>
@@ -1143,6 +1157,12 @@ h1, h2, h3, .section-label { scroll-margin-top: 88px; }
   </div>
 </div>
 
+<!-- Ingrandimento foto -->
+<div class="lente" id="lente" onclick="chiudiLente()">
+  <button class="lente-chiudi" onclick="chiudiLente()" aria-label="Chiudi">✕</button>
+  <img id="lente-img" src="" alt="">
+</div>
+
 <!-- FOOTER (shared) -->
 <footer id="shared-footer">
   <div class="footer-inner">
@@ -1167,7 +1187,10 @@ h1, h2, h3, .section-label { scroll-margin-top: 88px; }
       <p style="margin-top:4px;">Tel: 347 – 6374358</p>
       <p style="margin-top:12px;">Seguici sui social</p>
       <div class="social-links" style="margin-top:8px;">
-        <a href="https://www.instagram.com/clanzebru/" target="_blank" rel="noopener" title="Instagram" aria-label="Instagram">
+        <a href="https://www.instagram.com/scoutpinotorinese/" target="_blank" rel="noopener" title="Instagram del gruppo" aria-label="Instagram del gruppo">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.3-1.46.72-2.13 1.38C1.35 2.68.93 3.35.63 4.14.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.3.79.72 1.46 1.38 2.13.67.66 1.34 1.08 2.13 1.38.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56.79-.3 1.46-.72 2.13-1.38.66-.67 1.08-1.34 1.38-2.13.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91-.3-.79-.72-1.46-1.38-2.13C21.32 1.35 20.65.93 19.86.63c-.76-.3-1.64-.5-2.91-.56C15.67.01 15.26 0 12 0z"/><path d="M12 5.84a6.16 6.16 0 1 0 0 12.32 6.16 6.16 0 0 0 0-12.32zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/><circle cx="18.41" cy="5.59" r="1.44"/></svg>
+        </a>
+        <a href="https://www.instagram.com/clanzebru/" target="_blank" rel="noopener" title="Instagram del Clan Zebrù" aria-label="Instagram del Clan">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.3-1.46.72-2.13 1.38C1.35 2.68.93 3.35.63 4.14.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.3.79.72 1.46 1.38 2.13.67.66 1.34 1.08 2.13 1.38.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56.79-.3 1.46-.72 2.13-1.38.66-.67 1.08-1.34 1.38-2.13.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91-.3-.79-.72-1.46-1.38-2.13C21.32 1.35 20.65.93 19.86.63c-.76-.3-1.64-.5-2.91-.56C15.67.01 15.26 0 12 0z"/><path d="M12 5.84a6.16 6.16 0 1 0 0 12.32 6.16 6.16 0 0 0 0-12.32zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/><circle cx="18.41" cy="5.59" r="1.44"/></svg>
         </a>
         <a href="https://www.facebook.com/Gruppo-Scout-Pino-Torinese-1-150108985095296/" target="_blank" rel="noopener" title="Facebook" aria-label="Facebook">
@@ -1200,6 +1223,8 @@ function showPage(id) {
     target.classList.add('active');
     target.appendChild(footer);
     window.scrollTo(0, 0);
+    // La galleria di questa branca si scarica solo adesso
+    if (typeof window.__mostraGalleria === 'function') window.__mostraGalleria(id);
   }
   // update nav active
   document.querySelectorAll('.nav-links a, .nav-links span').forEach(a => {
@@ -1217,12 +1242,9 @@ function toggleMenu() {
 /* Fascia "in ristrutturazione": una volta chiusa resta nascosta
    per la sessione, non per sempre. Chi torna domani la rivede,
    ed è giusto finché il sito è davvero incompleto. */
-if (sessionStorage.getItem('pt-fascia-chiusa')) {
-  document.getElementById('fascia-lavori').style.display = 'none';
-}
 function chiudiFascia() {
   sessionStorage.setItem('pt-fascia-chiusa', '1');
-  document.getElementById('fascia-lavori').style.display = 'none';
+  document.getElementById('fascia-lavori').hidden = true;
 }
 
 // init footer on home
@@ -1237,7 +1259,7 @@ document.getElementById('page-home').appendChild(footer);
    di riserva definiti in pt-config.js: il sito resta leggibile
    invece di mostrare sezioni vuote.
    ═══════════════════════════════════════════════════════════ */
-import { caricaContenuti, BRANCHE, iniziali, FIREBASE_CONFIG } from './pt-config.js';
+import { caricaContenuti, caricaGalleria, BRANCHE, iniziali, FIREBASE_CONFIG } from './pt-config.js';
 
 /* Fonte unica di verità per la parte dinamica della pagina. */
 const DATA = { capi: [], iscrizioni: {}, avvisi: [], online: false, pronto: false };
@@ -1864,6 +1886,8 @@ function renderCalendario() {
     filtri.querySelectorAll('[data-fc]').forEach(c => c.onclick = () => {
       filtroCal = c.dataset.fc;
       renderCalendario();
+  renderKpi();
+  renderFascia();
     });
   }
 
@@ -1926,6 +1950,98 @@ function schedaEvento(e) {
     </div>
   </div>`;
 }
+
+/* ═══════════════════════════════════════════════════════════
+   NUMERI IN EVIDENZA, FASCIA DI AVVISO, GALLERIE
+   ═══════════════════════════════════════════════════════════ */
+
+function renderKpi() {
+  const box = document.getElementById('hero-kpi');
+  if (!box) return;
+  box.innerHTML = (DATA.kpi || []).map(k => `
+    <div class="stat-box">
+      <div class="stat-num">${esc(k.valore)}</div>
+      <div class="stat-label">${esc(k.etichetta)}</div>
+    </div>`).join('');
+}
+
+function renderFascia() {
+  const box = document.getElementById('fascia-lavori');
+  const txt = document.getElementById('fascia-testo');
+  if (!box || !txt) return;
+
+  const attiva = DATA.impostazioni?.bannerAttivo === true;
+
+  // Chi l'ha già chiusa in questa sessione non la rivede.
+  if (!attiva || sessionStorage.getItem('pt-fascia-chiusa')) {
+    box.hidden = true;
+    return;
+  }
+
+  const testo = (DATA.impostazioni?.bannerTesto || '').trim();
+  txt.innerHTML = testo
+    ? esc(testo)
+    : `<strong>Sito in ristrutturazione.</strong> Stiamo rifacendo le pagine:
+       alcune informazioni potrebbero essere incomplete. Per qualsiasi cosa scrivi a
+       <a href="mailto:pinotorinese1@piemonte.agesci.it" style="color:#e65100;">pinotorinese1@piemonte.agesci.it</a>`;
+  box.hidden = false;
+}
+
+/* Le gallerie si caricano solo quando si apre la pagina della branca:
+   pesano più di tutto il resto del sito e non hanno motivo di
+   raggiungere chi si ferma alla home. */
+const gallerieFatte = new Set();
+
+async function mostraGalleria(branca) {
+  const box = document.getElementById('galleria-' + branca);
+  if (!box) return;
+
+  const attiva = DATA.impostazioni?.gallerie?.[branca] === true;
+  if (!attiva) { box.innerHTML = ''; return; }
+  if (gallerieFatte.has(branca)) return;
+  gallerieFatte.add(branca);
+
+  box.innerHTML = `<div class="section-label" style="margin-top:2.5rem;">
+      <h3>Galleria</h3><div class="line"></div><div class="badge">Foto</div>
+    </div>
+    <div class="caricamento">Carico le foto…</div>`;
+
+  const foto = await caricaGalleria(branca);
+
+  if (!foto.length) {
+    box.innerHTML = '';
+    gallerieFatte.delete(branca);   // riprova alla prossima visita
+    return;
+  }
+
+  box.innerHTML = `<div class="section-label" style="margin-top:2.5rem;">
+      <h3>Galleria</h3><div class="line"></div><div class="badge">${foto.length} foto</div>
+    </div>
+    <div class="galleria">${foto.map((f, i) => `
+      <div class="gal-cella" onclick="apriLente(${i}, '${branca}')">
+        <img src="${f}" alt="Foto ${i + 1}" loading="lazy">
+      </div>`).join('')}</div>`;
+
+  window['__gal_' + branca] = foto;
+}
+
+window.apriLente = (indice, branca) => {
+  const foto = window['__gal_' + branca];
+  if (!foto?.[indice]) return;
+  document.getElementById('lente-img').src = foto[indice];
+  document.getElementById('lente').classList.add('aperta');
+};
+
+window.__mostraGalleria = branca => mostraGalleria(branca);
+
+window.chiudiLente = () => {
+  document.getElementById('lente').classList.remove('aperta');
+  document.getElementById('lente-img').src = '';
+};
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') window.chiudiLente();
+});
 
 /* ─── AVVIO ─── */
 async function avvia() {
